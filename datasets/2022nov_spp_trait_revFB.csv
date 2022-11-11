@@ -1,0 +1,63 @@
+Genus;spp;Code;biogeo2;hab2;Classification
+Ateuchus;volxemi;Ateuchus.volxemi;MA;F;FS
+Ateuchus;carbonarius ;Ateuchus.carbonarius;MA;F;FS
+Ateuchus;sp.3;Ateuchus.sp3;CE;O;NFS
+Canthidium;dispar;Canthidium.dispar;MA;O;NFS
+Canthidium;globulum;Canthidium.aff.globulum;MA;O;NFS
+Canthidium;sp;Canthidium.sp;MA;F;FS
+Canthidium;sp.2;Canthidium.sp2;CE;O;NFS
+Canthon;chalybaeus;Canthon.chalybaeus;WIDE;G;NFS
+Canthon;aff. angularis;Canthon.aff.angularis;MA;G;NFS
+Canthon;ibarragrassoi;Canthon.ibarragrassoi;MA;F;FS
+Canthon;aff. luctuosus;Canthon.aff.luctuosus;MA;F;FS
+Canthon;podagricus;Canthon.podagricus;TRANS;G;NFS
+Canthon;aff. semiopacus;Canthon.aff.semiopacus;MA;F;FS
+Canthon;histrio;Canthon.histrio;WIDE;G;NFS
+Canthon;virens chalybaeus;Canthon.virens.chalybaeus;WIDE;G;NFS
+Chalcocopris;hesperus;Chalcocopris.hesperus;TRANS;G;NFS
+Coprophanaeus;bellicosus;Coprophanaeus.bellicosus;MA;F;FS
+Coprophanaeus;cerberus;Coprophanaeus.cerberus;MA;F;FS
+Coprophanaeus;saphirinus;Coprophanaeus.saphirinus;MA;F;FS
+Deltochilum;brasiliense;Deltochilum.brasiliense;AF;F;FS
+Deltochilum;dentipes;Deltochilum.dentipes;AF;F;FS
+Deltochilum;furcatum;Deltochilum.furcatum;MA;F;FS
+Deltochilum;morbillosum;Deltochilum.morbillosum;TRANS;F;NFS
+Deltochilum;rubripenne;Deltochilum.rubripenne;TRANS;F;NFS
+Deltochilum;sp;Deltochilum.sp.;TRANS;O;NFS
+Dichotomius;assifer;Dichotomius.assifer;MA;G;NFS
+Dichotomius;bos;Dichotomius.bos;WIDE;O;NFS
+Dichotomius;aff. carbonarius sp.1;Dichotomius.aff.carbonarius.sp1;CE;G;NFS
+Dichotomius;depressicollis ;Dichotomius.depressicollis;MA;F;FS
+Dichotomius;fissus ;Dichotomius.fissus;MA;G;NFS
+Dichotomius;mormon;Dichotomius.mormon;MA;F;FS
+Dichotomius;aff. carbonarius sp.2;Dichotomius.aff.carbonarius.sp2;TRANS;F;NFS
+Dichotomius;quadrinodosus ;Dichotomius.quadrinodosus;MA;F;FS
+Dichotomius;sp.1;Dichotomius.sp1;MA;F;FS
+Dichotomius;sp.2;Dichotomius.sp2;MA;F;FS
+Dichotomius;sp.3;Dichotomius.sp3;TRANS;G;NFS
+Dichotomius;sp.4;Dichotomius.sp4;TRANS;G;NFS
+Dichotomius;sp.5;Dichotomius.sp5;MA;F;FS
+Eurysternus;cyanescens;Eurysternus.cyanescens;TRANS;F;NFS
+Eurysternus;francinae;Eurysternus.francinae;MA;F;FS
+Eurysternus;hirtellus;Eurysternus.hirtellus;TRANS;F;NFS
+Eurysternus;inflexus;Eurysternus.inflexus;MA;F;FS
+Eurysternus;parallelus;Eurysternus.parallelus;TRANS;G;NFS
+Ontherus;sulcator;Ontherus.sulcator;WIDE;G;NFS
+Onthophagus;sp.1;Onthophagus.sp1;MA;F;FS
+Onthophagus;sp.2;Onthophagus.sp2;MA;F;FS
+Onthophagus;sp.3;Onthophagus.sp3;MA;F;FS
+Onthophagus;sp.4;Onthophagus.sp4;CE;O;NFS
+Paracanthon;rosinae;Paracanthon.rosinae;MA;F;FS
+Paracanthon;monteiroorum;Paracanthon.monteiroorum;MA;F;FS
+Phanaeus;dejeani;Phanaeus.dejeani;MA;F;FS
+Phanaeus;splendidulus;Phanaeus.splendidulus;MA;F;FS
+Pseudocanthon;xanthurus;Pseudocanthon.xanthurus;TRANS;G;NFS
+Scybalocanthon;nigriceps;Scybalocanthon.nigriceps;MA;F;FS
+Sulcophanaeus;menelas;Sulcophanaeus.menelas;WIDE;O;NFS
+Sylvicanthon;foveiventris;Sylvicanthon.foveiventris;MA;F;FS
+Trichillum;sp.1;Trichillum.sp.;TRANS;O;NFS
+Uroxys;brevis;Uroxys.aff.brevis;MA;F;FS
+Uroxys;sp.1;Uroxys.sp1;TRANS;F;NFS
+Uroxys;sp.2;Uroxys.sp2;TRANS;F;NFS
+Uroxys;sp.3;Uroxys.sp3;TRANS;F;NFS
+Uroxys;sp.4;Uroxys.sp4;TRANS;F;NFS

@@ -1,0 +1,214 @@
+---
+title: "Data wrangling for beetles biodiversity"
+author: "Julia Barreto"
+date: "8/23/2019"
+output: 
+  rmdformats::readthedown
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(cache = T, message = F, warning = F, error= F)
+library(here)
+library(tidyverse)
+library(kableExtra)
+library(readxl)
+library(janitor)
+```
+
+# Importing and organizing datasets:
+
+Raw biodiversity data (beetles abundance):
+```{r}
+data <- read.csv(here("datasets", "beetles_biodiversity.csv"), header = TRUE,
+                 sep=";")
+```
+
+### Remove singletons:
+
+Check species of only one individual collected in the whole project to remove it. The detected singletons from forests are: Canthon.histrio, Canthon.podagricus, Coprophanaeus.bellicosus, Deltochilum.sp., Dichotomius.bos, Uroxys.aff.brevis.
+```{r, echo=T}
+spp_all <- data %>% 
+  dplyr::select(-Landscape, -Point, -Trap_num,-Year,
+                -Month,-Day,-Muncipality,-Lat,-Long,-Alt)
+sort(colSums(spp_all)) 
+
+### we have 6 project singletons
+
+# remove those project singletons from data
+data2 <- data %>% 
+  dplyr::select( -Canthon.histrio, -Canthon.podagricus,
+                 -Coprophanaeus.bellicosus, -Deltochilum.sp.,
+                 -Dichotomius.bos, -Uroxys.aff.brevis )
+
+```
+### Tidy biological datra format for analyses
+For now we have species per column in the abundance matrix per pitfall, tidy formatting to remove columns we won't use and pivot the table longer to organize species abundance in rows instead of columns. Data product renamed as 'beetles'. 
+
+```{r}
+data3 <- data2 %>% 
+  dplyr::select(-Trap_num,-Year,-Month,-Day,-Muncipality,-Lat,-Long,-Alt) %>%
+  group_by(Landscape,Point) %>% summarise_all(sum) %>% gather("spp","abundance",3:53)
+
+# rename data 5 so I can remember what it stands for
+beetles <- data3
+
+## community data (sppXsite matrix) - entry for beta RC calculations
+b.com <- data2 %>% 
+  dplyr::select(-Trap_num,-Year,-Month,-Day,-Muncipality,-Lat,-Long,-Alt) %>%
+  group_by(Landscape,Point) %>% summarise_all(sum)
+
+```
+
+## HABITAT ASSOCIATION DATA
+
+Dataset containing trait information of each species to classify into habitat association based on literature data and personal  data from  an expert taxonomist (Prof. Dr. Fernando Augusto B. Silva, coauthor)
+
+```{r}
+hab.data <- read.csv(here("datasets", "2022nov_spp_trait_revFB.csv"), 
+                     sep= ";", header= T) %>%
+  filter(Code %in% unique(beetles$spp)) %>%
+  dplyr::select(-Genus, -spp) %>%
+  dplyr::rename("spp"= Code)
+# hab.data %>% tabyl(Classification)
+# Classification  n percent
+#              FS 27    0.54
+#             NFS 23    0.46
+
+# change!
+```
+
+
+## FOREST COVER
+
+Data on forest cover percentage of the 12 focal landscapes measured at a 3 and 5 km radius measured based in MapBiomas maps in June 2019. We used the Sampling Design tool in ArcGIS 10.1 to calculate the percentage of native forest cover in circular buffers of 3km and 5km radii around the landscape’s centroids.
+
+Contact	Julia Rodrigues Barreto
+	USP Sao Paulo
+	barretoj@usp.br
+
+```{r}
+env.data <- read.csv(here("datasets", "perc_fc_JB.csv"), sep = ";", dec = ",") %>% 
+              dplyr::rename(fc_3km= perfc_3km, fc_5km= perfc_5km) %>%
+  dplyr::select(Landscape, fc_3km, fc_5km)
+```
+
+# DIVERSITY METRICS
+
+## ALPHA, BETA & GAMMA
+
+### All spp
+First the whole dataset, regardless of habitat association.
+```{r}
+#### Mean alpha richness ~ fc
+alpha.rich <- beetles %>% mutate(occurrence= 1*(abundance>0)) %>%
+  group_by(Landscape,Point) %>% 
+  summarise(richness=sum(occurrence)) %>% # dois locais tem riqueza zero 263-13 e 266-28
+  group_by(Landscape) %>% # now per landscape n=12
+  summarise(alpha_rich = round(mean(richness),2))
+
+## gamma richness have to consider spp not to count it twice as it appears more than once per landscape
+gamma.rich <-beetles %>%  mutate(occurrence= 1*(abundance>0)) %>%
+  group_by(Landscape,spp) %>% 
+  summarise(tot.occ=sum(occurrence)) %>%
+  filter(tot.occ !=0) %>% # removing spp that were blank in that landscape
+  summarise(gamma_rich = n())
+div_all <- gamma.rich %>% left_join(alpha.rich,by= 'Landscape')
+
+### beta richness as gamma = alpha + beta
+div_all <- div_all %>% mutate(beta_rich= round(gamma_rich/alpha_rich,2))
+
+
+kable(div_all, booktabs=T, row.names = F, 
+      caption= "Biodiversity data containing alpha, beta and gamma diversities of all species.") %>% kable_styling(full_width = F) %>% landscape()
+```
+
+### For each class: FS & NFS
+
+Now using two datasets separated into habitat association classes: FS- forest specialists and NFS- non-forest specialists.
+```{r}
+
+alpha_hab <- beetles %>% mutate(occurrence= 1*(abundance>0)) %>%
+  left_join(hab.data,by= "spp") %>%
+  group_by(Landscape,Point, Classification) %>% 
+  summarise(richness=sum(occurrence)) %>% # dois locais tem riqueza zero 263-13 e 266-28
+  group_by(Landscape, Classification) %>% # now per landscape n=12
+  summarise(alpha_hab = round(mean(richness),2)) %>%
+  spread(Classification, alpha_hab) %>%
+  rename(alpha_FS= FS, alpha_NFS= NFS)
+  
+  
+## gamma richness have to consider spp not to count it twice as it appears more than once per landscape
+
+gamma_hab <-beetles %>%  mutate(occurrence= 1*(abundance>0)) %>%
+  left_join(hab.data,by= "spp") %>%
+  group_by(Landscape,Classification, spp) %>% 
+  summarise(tot.occ=sum(occurrence)) %>%
+  filter(tot.occ !=0) %>% # removing spp that were blank in that landscape
+  group_by(Landscape, Classification) %>%
+  summarise(gamma_hab = n()) %>%
+  spread(Classification, gamma_hab) %>%
+  rename(gamma_FS= FS, gamma_NFS= NFS)
+
+div_hab <- gamma_hab %>% left_join(alpha_hab,by= 'Landscape') %>% mutate(beta_FS= round(gamma_FS/alpha_FS,2), beta_NFS= round(gamma_NFS/alpha_NFS,2))
+
+kable(div_hab, booktabs=T, row.names = F,caption= "Dataset to test alpha, gamma and beta diversity of Forest Specialists (FS) species and Non-Forest Specialist species.") %>% kable_styling(full_width = F)
+```
+
+# Organizing abundance data
+Get the beetles' species abundance matrix, calculate abundance at site and landscape level:
+```{r}
+st.all_ab <- beetles %>%
+  ungroup() %>%
+  mutate(ab.tot = sum(abundance)) %>%
+  group_by(Landscape,Point, ab.tot) %>%
+  summarise(ab.point= sum(abundance)) %>% ## abundance at site level
+  group_by(Landscape, ab.tot) %>%
+  mutate(ab.land= sum(ab.point), m.ab= round(mean(ab.point),2))
+
+kable(st.all_ab) %>% kable_styling(bootstrap_options = c("striped", "hover"), full_width = F)
+
+ab_all <- st.all_ab %>% group_by(Landscape, ab.land) %>% summarise(mean.ab= round(mean(ab.point), 2), med.ab= median(ab.point), cv.ab= round(sd(ab.point)/mean(ab.point),2))
+
+kable(ab_all) %>% kable_styling(bootstrap_options = c("striped", "hover"), full_width = F)
+```
+
+Now between groups:
+```{r}
+st.hab_ab <- beetles %>%
+  left_join(hab.data,by= "spp") %>%
+  group_by(Classification) %>%
+  mutate(ab.tot = sum(abundance)) %>%
+  group_by(Landscape, Point, Classification, ab.tot) %>% 
+  summarise(ab.point=sum(abundance)) %>% 
+  group_by(Landscape, Classification, ab.tot) %>% 
+  mutate(m.ab = round(mean(ab.point),2)) %>%
+  gather(ab.spread, value, -(Landscape:Point:Classification)) %>%
+  unite(temp, Classification, ab.spread) %>%
+  spread(temp, value) %>%
+  mutate(ab.land_FS= sum(FS_ab.point), ab.land_NFS= sum(NFS_ab.point))
+
+kable(st.hab_ab) %>% kable_styling(bootstrap_options = c("striped", "hover"), full_width = F)
+
+ab_hab <- st.hab_ab %>% group_by(Landscape, ab.land_FS, ab.land_NFS) %>% 
+  summarise(mean.ab_FS= round(mean(FS_ab.point), 2), 
+            mean.ab_NFS= round(mean(NFS_ab.point), 2), 
+            med.ab_FS= median(FS_ab.point), med.ab_NFS= median(NFS_ab.point), 
+            cv.ab_FS= round(sd(FS_ab.point)/mean(FS_ab.point), 2), 
+            cv.ab_NFS= round(sd(NFS_ab.point)/mean(NFS_ab.point), 2))
+
+kable(ab_hab) %>% kable_styling(bootstrap_options = c("striped", "hover"), full_width = F)
+```
+
+#Save final tidy dataset:
+```{r}
+# save(b.com, # community data (sppXsite matrix entry for beta RC calculations)
+#      beetles, hab.data,  # raw data for abundance and habitat association
+#      env.data, # environmental variables
+#      div_all, # diversity (alpha, beta and gamma) for all species
+#      div_hab, # diversity (alpha, beta and gamma) between classification habitat association
+#      ab_all, # mean and median abundance for all species
+#      ab_hab, # mean and median abundance between classification habitat association
+#      st.hab_ab, # abundance data between classification habitat association per site
+#      st.all_ab, # abundance data between classification habitat association per site
+#      file= here("datasets", "beetles.Rdata"))
+```
