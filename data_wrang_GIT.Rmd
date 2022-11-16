@@ -23,6 +23,8 @@ data <- read.csv(here("datasets", "beetles_biodiversity.csv"), header = TRUE,
                  sep=";")
 ```
 
+## PREP AND TREATING DATA
+
 ### Remove singletons:
 
 Check species of only one individual collected in the whole project to remove it. The detected singletons from forests are: Canthon.histrio, Canthon.podagricus, Coprophanaeus.bellicosus, Deltochilum.sp., Dichotomius.bos, Uroxys.aff.brevis.
@@ -41,7 +43,8 @@ data2 <- data %>%
                  -Dichotomius.bos, -Uroxys.aff.brevis )
 
 ```
-### Tidy biological datra format for analyses
+### Tidy format for analyses
+
 For now we have species per column in the abundance matrix per pitfall, tidy formatting to remove columns we won't use and pivot the table longer to organize species abundance in rows instead of columns. Data product renamed as 'beetles'. 
 
 ```{r}
@@ -51,12 +54,6 @@ data3 <- data2 %>%
 
 # rename data 5 so I can remember what it stands for
 beetles <- data3
-
-## community data (sppXsite matrix) - entry for beta RC calculations
-b.com <- data2 %>% 
-  dplyr::select(-Trap_num,-Year,-Month,-Day,-Muncipality,-Lat,-Long,-Alt) %>%
-  group_by(Landscape,Point) %>% summarise_all(sum)
-
 ```
 
 ## HABITAT ASSOCIATION DATA
@@ -92,39 +89,11 @@ env.data <- read.csv(here("datasets", "perc_fc_JB.csv"), sep = ";", dec = ",") %
   dplyr::select(Landscape, fc_3km, fc_5km)
 ```
 
-# DIVERSITY METRICS
+# CALCULATING METRICS
 
-## ALPHA, BETA & GAMMA
+## ALPHA, BETA & GAMMA: FS & NFS
 
-### All spp
-First the whole dataset, regardless of habitat association.
-```{r}
-#### Mean alpha richness ~ fc
-alpha.rich <- beetles %>% mutate(occurrence= 1*(abundance>0)) %>%
-  group_by(Landscape,Point) %>% 
-  summarise(richness=sum(occurrence)) %>% # dois locais tem riqueza zero 263-13 e 266-28
-  group_by(Landscape) %>% # now per landscape n=12
-  summarise(alpha_rich = round(mean(richness),2))
-
-## gamma richness have to consider spp not to count it twice as it appears more than once per landscape
-gamma.rich <-beetles %>%  mutate(occurrence= 1*(abundance>0)) %>%
-  group_by(Landscape,spp) %>% 
-  summarise(tot.occ=sum(occurrence)) %>%
-  filter(tot.occ !=0) %>% # removing spp that were blank in that landscape
-  summarise(gamma_rich = n())
-div_all <- gamma.rich %>% left_join(alpha.rich,by= 'Landscape')
-
-### beta richness as gamma = alpha + beta
-div_all <- div_all %>% mutate(beta_rich= round(gamma_rich/alpha_rich,2))
-
-
-kable(div_all, booktabs=T, row.names = F, 
-      caption= "Biodiversity data containing alpha, beta and gamma diversities of all species.") %>% kable_styling(full_width = F) %>% landscape()
-```
-
-### For each class: FS & NFS
-
-Now using two datasets separated into habitat association classes: FS- forest specialists and NFS- non-forest specialists.
+Using two datasets separated into habitat association classes: FS- forest specialists and NFS- non-forest specialists.
 ```{r}
 
 alpha_hab <- beetles %>% mutate(occurrence= 1*(abundance>0)) %>%
@@ -154,25 +123,9 @@ div_hab <- gamma_hab %>% left_join(alpha_hab,by= 'Landscape') %>% mutate(beta_FS
 kable(div_hab, booktabs=T, row.names = F,caption= "Dataset to test alpha, gamma and beta diversity of Forest Specialists (FS) species and Non-Forest Specialist species.") %>% kable_styling(full_width = F)
 ```
 
-# Organizing abundance data
+# ABUNDANCES: FS & NFS
 Get the beetles' species abundance matrix, calculate abundance at site and landscape level:
-```{r}
-st.all_ab <- beetles %>%
-  ungroup() %>%
-  mutate(ab.tot = sum(abundance)) %>%
-  group_by(Landscape,Point, ab.tot) %>%
-  summarise(ab.point= sum(abundance)) %>% ## abundance at site level
-  group_by(Landscape, ab.tot) %>%
-  mutate(ab.land= sum(ab.point), m.ab= round(mean(ab.point),2))
 
-kable(st.all_ab) %>% kable_styling(bootstrap_options = c("striped", "hover"), full_width = F)
-
-ab_all <- st.all_ab %>% group_by(Landscape, ab.land) %>% summarise(mean.ab= round(mean(ab.point), 2), med.ab= median(ab.point), cv.ab= round(sd(ab.point)/mean(ab.point),2))
-
-kable(ab_all) %>% kable_styling(bootstrap_options = c("striped", "hover"), full_width = F)
-```
-
-Now between groups:
 ```{r}
 st.hab_ab <- beetles %>%
   left_join(hab.data,by= "spp") %>%
@@ -198,17 +151,167 @@ ab_hab <- st.hab_ab %>% group_by(Landscape, ab.land_FS, ab.land_NFS) %>%
 
 kable(ab_hab) %>% kable_styling(bootstrap_options = c("striped", "hover"), full_width = F)
 ```
+# BETA Raup-Crick: FS & NFS
 
-#Save final tidy dataset:
+Load functions:
 ```{r}
-# save(b.com, # community data (sppXsite matrix entry for beta RC calculations)
-#      beetles, hab.data,  # raw data for abundance and habitat association
-#      env.data, # environmental variables
-#      div_all, # diversity (alpha, beta and gamma) for all species
-#      div_hab, # diversity (alpha, beta and gamma) between classification habitat association
-#      ab_all, # mean and median abundance for all species
-#      ab_hab, # mean and median abundance between classification habitat association
-#      st.hab_ab, # abundance data between classification habitat association per site
-#      st.all_ab, # abundance data between classification habitat association per site
-#      file= here("datasets", "beetles.Rdata"))
+# Load beta RC presence-absence function:
+source(here("scripts", "raup_crick_modif.R"))
+# load beta RC abundance-based function:
+# função rc_qrand modificado de Puttker et al. 2014
+source(here("scripts", "rc_qrand_modif.R"))
+```
+
+
+Start from community matrix (spp x site) and subset it for each group, as we treat it separately:
+```{r}
+## community data (sppXsite matrix) - entry for beta RC calculations
+b.com <- data2 %>% 
+  dplyr::select(-Trap_num,-Year,-Month,-Day,-Muncipality,-Lat,-Long,-Alt) %>%
+  group_by(Landscape,Point) %>% summarise_all(sum)
+
+## vector for each set of species
+fs.spp <- hab.data %>% filter(Classification=="FS") %>% pull(spp)
+nfs.spp <-  hab.data %>% filter(Classification=="NFS") %>% pull(spp)
+
+# sitXsp datasets for each
+b.com.fs <- b.com %>% dplyr::select(Landscape, Point, all_of(fs.spp))
+b.com.nfs <- b.com %>% dplyr::select(Landscape, Point, all_of(nfs.spp))
+
+```
+
+
+## Presence-absence beta RC for FS and NFS:
+Set a regional pool as reference:
+```{r}
+## extract landscapes to loop it to
+Landscape <- unique(b.com$Landscape)
+##### FS #####
+# Pool regional - Forest specialists that were caught in all lands
+reg.pool.fs <- colSums(b.com.fs[,3:dim(b.com.fs)[2]]) ## regional pool of FS spp
+rc.df.fs <- data.frame(Landscape=NA, beta.rc=NA)
+beta.lands.fs <- list()
+
+for (i in 1:length(Landscape)){
+  b.com.fs2 <- b.com.fs[b.com.fs$Landscape == Landscape[i],]
+  beta <- raup_crick(b.com.fs2[,3:dim(b.com.fs2)[2]], plot_names_in_col1 = F, occur = reg.pool.fs)
+  rc.df.fs[i,1] <- Landscape[i]
+  rc.df.fs[i,2] <- mean(beta)
+  beta.lands.fs[[i]] <- beta
+}
+
+(rc.df.fs <- rc.df.fs %>% rename(brc.fs.raw = beta.rc))
+```
+
+Remove NA that arise from zero occurrence sites:
+```{r}
+# rmNA: remove 0 from calculations
+ttes <- map(beta.lands.fs, as.matrix)
+# function that substitute 0 per NA:
+fufa2 <- function(x)  ifelse(x==0, NA, x) 
+ttes <- modify_depth(ttes, 1, fufa2)
+ttes <- modify_depth(ttes, 1, as.dist)
+
+rc.df.fs$brc.fsNA <- map_dbl(ttes, mean, na.rm=T)
+```
+
+Same steps for non-forest specialists:
+```{r}
+##### NFS #####
+reg.pool.nfs <- colSums(b.com.nfs[,3:dim(b.com.nfs)[2]]) ## regional pool of nfs spp
+rc.df.nfs <- data.frame(Landscape=NA, beta.rc=NA)
+beta.lands.nfs <- list()
+
+for (i in 1:length(Landscape)){
+  b.com.nfs2 <- b.com.nfs[b.com.nfs$Landscape == Landscape[i],]
+  beta <- raup_crick(b.com.nfs2[,3:dim(b.com.nfs2)[2]], plot_names_in_col1 = F, occur = reg.pool.nfs)
+  rc.df.nfs[i,1] <- Landscape[i]
+  rc.df.nfs[i,2] <- mean(beta)
+  beta.lands.nfs[[i]] <- beta
+}
+
+(rc.df.nfs <- rc.df.nfs %>% rename(brc.nfs.raw = beta.rc))
+
+# rmNA: remove 0 from calculations
+ttes <- map(beta.lands.nfs, as.matrix)
+ttes <- modify_depth(ttes, 1, fufa2) # function that sub 0 for NA
+ttes <- modify_depth(ttes, 1, as.dist)
+rc.df.nfs$brc.nfsNA <- map_dbl(ttes, mean, na.rm=T)
+```
+
+
+## Abundance-based Beta RC for FS and NFS:
+
+First for Forest specialists, then for non-forest specialists, we set a regional species group, caculate beta and transform zero occurrence sites in NA to remove it from calculations.
+
+Final Beta Raup-Crick, both presence-absence abundance-based, below:
+```{r}
+
+##### RAUP-CRICK ABUNDANCE modif Puttker #####
+#### FS ####
+
+## set regional spp pool
+reg.pool.fs <- b.com.fs %>% ungroup() %>% dplyr::select(-Landscape, -Point) %>% 
+  summarise_all(sum) %>% gather("spp","abund",1:28)
+reg.pool.fs <- as.data.frame(reg.pool.fs)
+
+rc.df.abund.fs <- data.frame(Landscape=NA, brc.abund.fs.raw=NA)
+beta.lands.abund.fs <- list()
+
+for (i in 1:length(Landscape)){
+  b.com.fs2 <- b.com.fs[b.com.fs$Landscape == Landscape[i],]
+  b.com.fs2 <- as.matrix(b.com.fs2)
+  beta <- rc_qrand(b.com.fs2[,3:dim(b.com.fs2)[2]], pool = reg.pool.fs)
+  rc.df.abund.fs[i,1] <- Landscape[i]
+  rc.df.abund.fs[i,2] <- mean(beta, na.rm = T)
+  beta.lands.abund.fs[[i]] <- beta
+}
+
+# rmNA: remove 0 from calculations
+ttes <- map(beta.lands.abund.fs, as.matrix)
+ttes <- modify_depth(ttes, 1, fufa2) # function that sub 0 per NA
+ttes <- modify_depth(ttes, 1, as.dist)
+rc.df.abund.fs$brc.abund.fsNA <- map_dbl(ttes, mean, na.rm= T)
+
+#### NFS ####
+
+## set regional spp pool
+reg.pool.nfs <- b.com.nfs %>% ungroup() %>% dplyr::select(-Landscape, -Point) %>% summarise_all(sum) %>% gather("spp","abund",1:23)
+reg.pool.nfs <- as.data.frame(reg.pool.nfs)
+
+rc.df.abund.nfs <- data.frame(Landscape=NA, brc.abund.nfs.raw=NA)
+beta.lands.abund.nfs <- list()
+
+for (i in 1:length(Landscape)){
+  b.com.nfs2 <- b.com.nfs[b.com.nfs$Landscape == Landscape[i],]
+  beta <- rc_qrand(b.com.nfs2[,3:dim(b.com.nfs2)[2]], pool = reg.pool.nfs)
+  rc.df.abund.nfs[i,1] <- Landscape[i]
+  rc.df.abund.nfs[i,2] <- mean(beta, na.rm = T)
+  beta.lands.abund.nfs[[i]] <- beta
+}
+
+# rmNA: remove 0 from calculations
+ttes <- map(beta.lands.abund.nfs, as.matrix)
+ttes <- modify_depth(ttes, 1, fufa2) # function that sub 0 per NA
+ttes <- modify_depth(ttes, 1, as.dist)
+rc.df.abund.nfs$brc.abund.nfsNA <- map_dbl(ttes, mean, na.rm= T)
+
+#### gather all data in one set to then save it
+(rc.df <- rc.df.fs %>%  # P/A-based Brc  for fs spp
+   left_join(rc.df.nfs, by= "Landscape") %>%# P/A-based Brc for NFS
+   left_join(rc.df.abund.fs, by= "Landscape") %>% # Abund-based FS
+   left_join(rc.df.abund.nfs, by= "Landscape") %>% # Abund-based NFS
+   left_join(env.data, by= "Landscape"))
+```
+
+# Save final tidy dataset:
+```{r}
+save(beetles, # raw data for species occurrence per landscape/site; 
+     hab.data, # data containing classes of habitat association;
+     env.data, # environmental variables
+     div_hab, # diversity (alpha, beta and gamma) between classification habitat association
+     ab_hab, # mean and median abundance between classification habitat association
+     st.hab_ab, # abundance data between classification habitat association per site
+     rc.df, # Beta RC calculations
+     file= here("datasets", "beetles.Rdata"))
 ```

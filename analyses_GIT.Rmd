@@ -31,14 +31,7 @@ library(janitor)
 library(ggpubr) # devtools::install_github("kassambara/ggpubr")
 ```
 
-# Ver com a Me:
 
-1) conferência dos recálculos, alpha FS parou de responder
-2) Olhar o código e resíduos, alguns já não parecem mais ok
-3) marcar na planilha os bichos que mudaram
-4) cálculo beta RC dentro do wrangling ou separado? onde jogo as funções (em script separado e usar source)
-5) sugestão de como plotar quando tem nulo (linha tracejada mais clara e sem SE?)
-6) Plot também vai pro Git? script separado?
 
 ## Model formulas
 
@@ -51,12 +44,18 @@ Model 1 <- percentage of forest cover at 3 and 5km radius
 Model1.2 <- non-linear forest cover at 3 and 5km radius (quadratic model)
 
 
-Loading data and gathering into one dataset
+Loading data and gathering into one datasets calculated in script 'data_wrang_GIT.Rmd', content:
+1) "beetles": raw data for species occurrence per landscape/site;
+2) "hab.data": data containing classes of habitat association;
+3) "env.data": environmental variables, forest cover percent at 3 and 5km radius buffer
+4) "div_hab": diversity (alpha, beta and gamma) between classification habitat association
+5) "rc.df": Beta RC calculations
+6) "ab_hab": mean and median abundance between groups of habitat association
+7) "st.hab_ab": abundance data between classification habitat association per site
+
 ```{r load biological and environemental data, echo=F}
 # Beetle occurrence data
 load(here("datasets", "beetles.Rdata"))
-# beta RC data
-rc.df <- read.csv(here("datasets", "betaRC.csv"))
 
 ## SUMMARY OF THE 3 DATASETS AVAILABLE
  # beta.df - betapart metrics (sorensen or total, simpson or turnover and nestedness or SNE) for all groups
@@ -101,7 +100,6 @@ g5kq <- glm(gamma_FS ~ fc_5km +  I(fc_5km^2), data=data_div, family= Gamma (link
 g3k <- glm(gamma_FS ~ fc_3km, data=data_div, family= Gamma (link = "identity"))
 g3kq <- glm(gamma_FS ~ fc_3km +  I(fc_3km^2), data=data_div, family= Gamma (link = "identity"))
 
-
 ## AIC-based model selection
 (g.fs.aic <- AICctab(g0, g5k, g5kq, g3k, g3kq,
                       base=T,weights=T, logLik=T))
@@ -110,7 +108,9 @@ g3kq <- glm(gamma_FS ~ fc_3km +  I(fc_3km^2), data=data_div, family= Gamma (link
 ### Summary top model
 ```{r}
 summary(g5k)
+g.fs <- g5k# rename top model to save and plot below
 ```
+
 ### Inspect residuals:
 ```{r}
 sim <- simulateResiduals(g5k)
@@ -150,7 +150,7 @@ new$ic.low <- preds$fit - preds$se.fit*1.96
 
 
 ## Plot gamma richness ~ fc_5km
-(g.fs <- ggplot(new, aes(x=fc_5km, y=pred)) + geom_line() +
+ggplot(new, aes(x=fc_5km, y=pred)) + geom_line() +
   geom_ribbon(aes(x=fc_5km , ymax=ic.up, ymin=ic.low), alpha=0.1) +
   # geom_line(aes(y= pred2)) +
   # geom_ribbon(aes(ymax=ic.up2, ymin=ic.low2), alpha=0.1) +
@@ -158,7 +158,6 @@ new$ic.low <- preds$fit - preds$se.fit*1.96
 #  ggtitle("Gamma Diversity (FS) as a function of Forest cover (5km)") +
   xlab("Percent forest cover (5km)") + ylab("Gamma (FS)") + 
   theme(axis.text=element_text(size=15), axis.title=element_text(size=14,face="bold"),legend.position = 'none') + ylim(0,max(data_div[,2:7])+1) #+ scale_x_reverse()
-  )
 ```
 
 ## Alpha diversity
@@ -182,6 +181,7 @@ a3kq <- glm(alpha_FS ~ fc_3km +  I(fc_3km^2), data=data_div, family= Gamma (link
 ### Summary top model
 ```{r}
 summary(a5k)
+a.fs <- a5k# rename top model to save and plot below
 ```
 
 ### Inspect residuals:
@@ -231,13 +231,13 @@ new$ic.up <- preds$fit + preds$se.fit*1.96
 new$ic.low <- preds$fit - preds$se.fit*1.96 
 
 ## Plot Alpha richness ~ fc_5km
-(a5k.fs <- ggplot(new, aes(x=fc_5km, y=pred)) + 
-  geom_line() +
-  geom_ribbon(aes(x=fc_5km , ymax=ic.up, ymin=ic.low), alpha=0.1) +
+ggplot(new, aes(x=fc_5km, y=pred)) + 
+  geom_line(linetype= 'dashed', color= "lightgrey") +
+  # geom_ribbon(aes(x=fc_5km , ymax=ic.up, ymin=ic.low), alpha=0.1) +
   geom_point(data=data_div, aes(x=fc_5km, y=alpha_FS)) +
 #  ggtitle("Alpha Diversity (FS) as a function of Forest cover (5km)") +
   xlab("Percent forest cover (5km)") + ylab("Alpha (FS)") + 
-  theme(axis.text=element_text(size=15), axis.title=element_text(size=14,face="bold"),legend.position = 'none') + ylim(0,max(data_div[,2:7])+1))
+  theme(axis.text=element_text(size=15), axis.title=element_text(size=14,face="bold"),legend.position = 'none') + ylim(0,max(data_div[,2:7])+1)
 ```
 
 ## Beta diversity additive
@@ -260,6 +260,7 @@ b3kq <- glm(betad_FS ~ fc_3km +  I(fc_3km^2), data=data_div, family= Gamma (link
 ### Summary top model
 ```{r}
 summary(b5k)
+b.fs <- b5k # rename top model to save and plot below
 ```
 
 ### Inspect residuals:
@@ -273,7 +274,6 @@ boot::glm.diag.plots(b5k) ## for glm Gamma or neg binom
 
 ```{r aic table entries for beta add fs,echo=F}
 # R2 based on Nakagawa et al. 2017: variação explicada pelos efeitos fixos dividida pela total
-b5kq.r2 <- r2(b5kq)
 b5k.r2 <- r2(b5k)
 
 
@@ -305,12 +305,12 @@ new$ic.up2 <- preds2$fit + preds2$se.fit*1.96
 new$ic.low2 <- preds2$fit - preds2$se.fit*1.96 
 
 ## Plot Beta Diversity ~ fc_5km
-(b5k.fs <- ggplot(new, aes(x=fc_5km, y=pred)) + geom_line() +
+ggplot(new, aes(x=fc_5km, y=pred)) + geom_line() +
   geom_ribbon(aes(x=fc_5km , ymax=ic.up, ymin=ic.low), alpha=0.1) +
   geom_point(data=data_div, aes(x=fc_5km, y=betad_FS)) +
   xlab("Percent forest cover (5km)") + ylab("Beta (FS)") + 
   theme(axis.text=element_text(size=15), axis.title=element_text(size=14,face="bold"),legend.position = 'none') + 
-    ylim(0,max(data_div[,2:7])+1))
+    ylim(0,max(data_div[,2:7])+1)
 ```
 
 ## bRaup-Crick (presence/absence-based)
@@ -333,6 +333,7 @@ rc3kq <- lm(brc.fsNA ~ fc_3km +  I(fc_3km^2), data=data_div)
 ### Summary of 2nd best model, as the top is of absence of effect (~1)
 ```{r}
 summary(rc3kq)
+rc1.fs <- rc0# rename top model to save and plot below
 ```
 
 ### Inspect residuals:
@@ -347,7 +348,6 @@ hnp::hnp(rc3kq)
 ```{r, echo=F}
 # R2 based on Nakagawa et al. 2017: variação explicada pelos efeitos fixos dividida pela total
 rc3kq.r2 <- r2(rc3kq)
-rc5k.r2 <- r2(rc5k)
 
 ## build AIC table do add model selection results:
 aic.tab <- rbind(aic.tab, c("RCbeta (P/A-based) FS", 
@@ -362,13 +362,7 @@ aic.tab <- rbind(aic.tab, c("RCbeta (P/A-based) FS",
                             round(rc.fs.aic$dAICc[2],1),
                    rc.fs.aic$df[2],
                             round(rc.fs.aic$weight[2],2),
-                            round(rc3kq.r2$R2_adjusted,2)),
-                 c(" ", "FC at 5km",
-                   round(rc.fs.aic$AICc[3],2),
-                   round(rc.fs.aic$dAICc[3],1),
-                   rc.fs.aic$df[3],
-                   round(rc.fs.aic$weight[3],2),
-                   round(rc5k.r2$R2_adjusted,2)))
+                            round(rc3kq.r2$R2_adjusted,2)))
 
 ```
 
@@ -376,7 +370,7 @@ aic.tab <- rbind(aic.tab, c("RCbeta (P/A-based) FS",
 ```{r , echo=F}
 ## prediction rc5kq and rc5k
 new <- data.frame(fc_3km = seq(min(data_div$fc_3km),max(data_div$fc_3km), length.out=30))
-preds <- predict(rc3kq, type="response", newdata=new, se.fit=T)
+preds <- predict(rc0, type="response", newdata=new, se.fit=T)
 
 new$pred <- preds$fit
 new$ic.up <- preds$fit + preds$se.fit*1.96 
@@ -384,12 +378,13 @@ new$ic.low <- preds$fit - preds$se.fit*1.96
 
 
 ## Plot gamma richness ~ forest cover
-(rc.rb.fs <- ggplot(new, aes(x=fc_3km, y=pred)) + geom_line() +
+ggplot(new, aes(x=fc_3km, y=pred)) + 
+    geom_line(linetype= "dashed", color= "lightgrey") +
   geom_ribbon(aes(x=fc_3km , ymax=ic.up, ymin=ic.low), alpha=0.1) +
   geom_point(data=data_div, aes(x=fc_3km, y=brc.fsNA)) +
 #  ggtitle("BetaRC (FS) as a function of Forest Cover (3km)") +
   xlab("Percent forest cover (3km)") + ylab("RCbeta-P/A FS") + 
-  theme(axis.text=element_text(size=13), axis.title=element_text(size=14,face="bold"),legend.position = 'none') + ylim(-1,1))
+  theme(axis.text=element_text(size=13), axis.title=element_text(size=14,face="bold"),legend.position = 'none') + ylim(-1,1)
 ```
 
 ## Total abundance
@@ -412,6 +407,7 @@ gab3kq <- glm.nb(ab.land_FS ~ fc_3km +  I(fc_3km^2), data=data_div)
 ### Summary 2nd best model, as top model was the one of absence of effect (~1):
 ```{r}
 summary(gab5k)
+gab.fs <- gab5k# rename top model to save and plot below
 ```
 
 ### Inspect residuals:
@@ -461,13 +457,13 @@ new$ic.up <- preds$fit + preds$se.fit*1.96
 new$ic.low <- preds$fit - preds$se.fit*1.96 
 
 ## Plot gamma richness ~ forest cover 5km
-(gab.fs <- ggplot(new, aes(x=fc_5km, y=pred)) + 
+ggplot(new, aes(x=fc_5km, y=pred)) + 
   geom_line(linetype= "dashed", col= "grey") +
   # geom_ribbon(aes(x=fc_5km , ymax=ic.up, ymin=ic.low), alpha=0.1) +
   geom_point(data=data_div, aes(x=fc_5km, y=ab.land_FS)) +
 #  ggtitle("Gamma Abundance (fs spp) as a function of Forest cover (5km)") +
   xlab("Percent forest cover (5km)") + ylab("Total Abund FS") + 
-  theme(axis.text=element_text(size=15), axis.title=element_text(size=14,face="bold"),legend.position = 'none'))
+  theme(axis.text=element_text(size=15), axis.title=element_text(size=14,face="bold"),legend.position = 'none')
 ```
 
 ## bRaup-Crick (abundance-based)
@@ -490,6 +486,7 @@ rc3kq <- lm(brc.abund.fsNA ~ fc_3km +  I(fc_3km^2), data=data_div)
 ### Summary top model:
 ```{r}
 summary(rc5k)
+rc2.fs <- rc5k# rename top model to save and plot below
 ```
 
 ### Inspect residuals:
@@ -534,12 +531,12 @@ new$ic.up <- preds$fit + preds$se.fit*1.96
 new$ic.low <- preds$fit - preds$se.fit*1.96 
 
 ## Plot RCbeta abundance ~ forest cover at 5
-(rc.ab.fs <- ggplot(new, aes(x=fc_5km, y=pred)) + geom_line() +
+ggplot(new, aes(x=fc_5km, y=pred)) + geom_line() +
   geom_ribbon(aes(x=fc_5km , ymax=ic.up, ymin=ic.low), alpha=0.1) + 
   geom_point(data=data_div, aes(x=fc_5km, y=brc.abund.fsNA)) +
 #  ggtitle("BetaRC (FS) as a function of Forest Cover (5km)") +
   xlab("Percent forest cover") + ylab("RCbeta-abund FS") + 
-  theme(axis.text=element_text(size=14), axis.title=element_text(size=14,face="bold"),legend.position = 'none') + ylim(-1,1))
+  theme(axis.text=element_text(size=14), axis.title=element_text(size=14,face="bold"),legend.position = 'none') + ylim(-1,1)
 ```
 
 # NON-FOREST SPECIALISTS
@@ -565,6 +562,7 @@ g3kq <- glm(gamma_NFS ~ fc_3km +  I(fc_3km^2), data=data_div, family= Gamma (lin
 ### Summary top model:
 ```{r}
 summary(g3k)
+g.nfs <- g3k # rename top model to save and plot below
 ```
 
 ### Inspect residuals:
@@ -603,12 +601,11 @@ new$ic.up <- preds$fit + preds$se.fit*1.96
 new$ic.low <- preds$fit - preds$se.fit*1.96 
 
 ## Plot gamma richness ~ fc_3km
-(g3k.nfs <- ggplot(new, aes(x=fc_3km, y=pred)) + geom_line() +
+ggplot(new, aes(x=fc_3km, y=pred)) + geom_line() +
   geom_ribbon(aes(x=fc_3km , ymax=ic.up, ymin=ic.low), alpha=0.1) +
   geom_point(data=data_div, aes(x=fc_3km, y=gamma_NFS)) +
   xlab("Percent forest cover (3km)") + ylab("Gamma (NFS)") + 
   theme(axis.text=element_text(size=13), axis.title=element_text(size=14,face="bold"),legend.position = 'none') + ylim(0,max(data_div[,2:7])+1)
-  )
 ```
 
 ## Alpha diversity
@@ -632,6 +629,7 @@ a3kq <- glm(alpha_NFS ~ fc_3km +  I(fc_3km^2), data=data_div, family= Gamma (lin
 ### Summary top model:
 ```{r}
 summary(a3k)
+a.nfs <- a3k # rename top model to save and plot below
 ```
 
 ### Inspect residuals:
@@ -678,14 +676,13 @@ new$ic.low <- preds$fit - preds$se.fit*1.96
 # round(new$pred[min(new$fc_3km)]/new$pred[max(new$fc_3km)],1) # 2.9, descriptive results purpose
 
 ## Plot Alpha richness ~ fc_5km
-(a3k.nfs <- ggplot(new, aes(x=fc_3km, y=pred)) + 
+ggplot(new, aes(x=fc_3km, y=pred)) + 
   geom_line() +
   geom_ribbon(aes(x=fc_3km , ymax=ic.up, ymin=ic.low), alpha=0.1) +
   geom_point(data=data_div, aes(x=fc_3km, y=alpha_NFS)) +
 #  ggtitle("Alpha Diversity (NFS) as a function of Forest cover (5km)") +
   xlab("Percent forest cover") + ylab("Alpha (NFS)") + 
   theme(axis.text=element_text(size=15), axis.title=element_text(size=14,face="bold"),legend.position = 'none') + ylim(0,max(data_div[,2:7])+1) #+ scale_x_reverse()
-  )
 ```
 
 ## Beta diversity additive
@@ -708,6 +705,7 @@ b3kq <- glm(betad_NFS ~ fc_3km +  I(fc_3km^2), data=data_div, family= Gamma (lin
 ### Summary top model:
 ```{r}
 summary(b3k)
+b.nfs <- b3k # rename top model to save and plot below
 ```
 
 ### Inspect residuals:
@@ -746,13 +744,13 @@ new$ic.low <- preds$fit - preds$se.fit*1.96
 
 
 ## Plot Beta Diversity ~ fc_3km
-(b3k.nfs <- ggplot(new, aes(x=fc_3km, y=pred)) + 
+ggplot(new, aes(x=fc_3km, y=pred)) + 
   geom_line() +
   geom_ribbon(aes(x=fc_3km , ymax=ic.up, ymin=ic.low), alpha=0.1) +
   geom_point(data=data_div, aes(x=fc_3km, y=betad_NFS)) +
 #  ggtitle("Beta Diversity (NFS) as a function of Forest cover (3km)") +
   xlab("Percent forest cover (3km)") + ylab("Beta (NFS)") + 
-  theme(axis.text=element_text(size=15), axis.title=element_text(size=14,face="bold"),legend.position = 'none') + ylim(0,max(data_div[,2:7])+1))
+  theme(axis.text=element_text(size=15), axis.title=element_text(size=14,face="bold"),legend.position = 'none') + ylim(0,max(data_div[,2:7])+1)
 ```
 
 ## bRaup-Crick (presence/absence-based)
@@ -775,6 +773,7 @@ rc3kq <- lm(brc.nfsNA ~ fc_3km +  I(fc_3km^2), data=data_div)
 ### Summary of 2nd best model, 1st wqs of absence of effect (~1):
 ```{r}
 summary(rc3k)
+rc1.nfs <- rc3k # rename top model to save and plot below
 ```
 ### Inspect residuals:
 ```{r resid rc rich nfs ~ fc}
@@ -796,7 +795,7 @@ aic.tab <- rbind(aic.tab, c("RCbeta (P/A-based) NFS",
                    round(rc.nfs.aic$dAICc[1],1),
                    rc.nfs.aic$df[1],
                    round(rc.nfs.aic$weight[1],2),
-                   round(rc5k.r2$R2_adjusted,2)),
+                   round(rc3k.r2$R2_adjusted,2)),
                    c(" ",  "~ 1 (NULL)",
                             round(rc.nfs.aic$AICc[2],2),
                             round(rc.nfs.aic$dAICc[2],1),
@@ -822,13 +821,13 @@ new$ic.up <- preds$fit + preds$se.fit*1.96
 new$ic.low <- preds$fit - preds$se.fit*1.96 
 
 ## Plot gamma richness ~ forest cover
-(rc.rb.nfs <- ggplot(new, aes(x=fc_3km, y=pred)) + 
+ggplot(new, aes(x=fc_3km, y=pred)) + 
   geom_line(linetype= "dashed", color= "lightgrey") +
-  geom_ribbon(aes(x=fc_3km , ymax=ic.up, ymin=ic.low), alpha=0.1) +
+  # geom_ribbon(aes(x=fc_3km , ymax=ic.up, ymin=ic.low), alpha=0.1) +
   geom_point(data=data_div, aes(x=fc_5km, y=brc.nfsNA)) +
 #  ggtitle("BetaRC (NFS) as a function of Forest Cover (5km)") +
   xlab("Percent forest cover") + ylab("RCbeta-P/A NFS") + 
-  theme(axis.text=element_text(size=15), axis.title=element_text(size=14,face="bold"),legend.position = 'none') + ylim(-1,1))
+  theme(axis.text=element_text(size=15), axis.title=element_text(size=14,face="bold"),legend.position = 'none') + ylim(-1,1)
 ```
 
 ## Total abundance
@@ -852,6 +851,7 @@ gab3kq <- glm.nb(ab.land_NFS ~ fc_3km +  I(fc_3km^2), data=data_div)
 ### Summary top model:
 ```{r}
 summary(gab5k)
+gab.nfs <- gab5k # rename top model to save and plot below
 ```
 ### Inspect residuals:
 ```{r}
@@ -902,13 +902,13 @@ new$ic.up <- preds$fit + preds$se.fit*1.96
 new$ic.low <- preds$fit - preds$se.fit*1.96 
 
 ## Plot gamma richness ~ forest cover 5km
-(gab.nfs <- ggplot(new, aes(x=fc_5km, y=pred)) + 
+ggplot(new, aes(x=fc_5km, y=pred)) + 
   geom_line() +
   geom_ribbon(aes(x=fc_5km , ymax=ic.up, ymin=ic.low), alpha=0.1) +
   geom_point(data=data_div, aes(x=fc_5km, y=ab.land_NFS)) +
 #  ggtitle("Gamma Abundance (nfs spp) as a function of Forest cover (5km)") +
   xlab("Percent forest cover (5km)") + ylab("Total Abund NFS") + 
-  theme(axis.text=element_text(size=15), axis.title=element_text(size=14,face="bold"),legend.position = 'none'))
+  theme(axis.text=element_text(size=15), axis.title=element_text(size=14,face="bold"),legend.position = 'none')
 ```
 
 ## bRaup-Crick (abundance-based)
@@ -931,6 +931,7 @@ rc3kq <- lm(brc.abund.nfsNA ~ fc_3km +  I(fc_3km^2), data=data_div)
 ### Summary 2nd best model, 1st is of absence of effect (~1):
 ```{r}
 summary(rc3k)
+rc2.nfs <- rc3k # rename top model to save and plot below
 ```
 
 ### Inspect residuals:
@@ -979,13 +980,13 @@ new$ic.up <- preds$fit + preds$se.fit*1.96
 new$ic.low <- preds$fit - preds$se.fit*1.96 
 
 ## Plot RCbeta abundance ~ forest cover at 5
-(rc.ab.nfs <- ggplot(new, aes(x=fc_3km, y=pred)) + 
+ggplot(new, aes(x=fc_3km, y=pred)) + 
   geom_line(linetype= "dashed", col= "lightgrey") +
-  geom_ribbon(aes(x=fc_3km , ymax=ic.up, ymin=ic.low), alpha=0.1) +
+  # geom_ribbon(aes(x=fc_3km , ymax=ic.up, ymin=ic.low), alpha=0.1) +
   geom_point(data=data_div, aes(x=fc_3km, y=brc.abund.nfsNA)) +
 #  ggtitle("BetaRC (NFS) as a function of Forest Cover (3km)") +
   xlab("Percent forest cover") + ylab("RCbeta-abund NFS") + 
-  theme(axis.text=element_text(size=14), axis.title=element_text(size=14,face="bold"),legend.position = 'none') + ylim(-1,1.1))
+  theme(axis.text=element_text(size=14), axis.title=element_text(size=14,face="bold"),legend.position = 'none') + ylim(-1,1.1)
 ```
  
 
@@ -995,29 +996,26 @@ kable(aic.tab, booktabs=T, row.names = F,caption= "Table S2. AICc-based selected
   kable_styling(bootstrap_options = c("striped", "hover"), full_width = F) %>%
     row_spec(seq(1, nrow(aic.tab), 2), bold= T)
 
-# aic.tab2 <- as.data.frame(aic.tab)
-# library("writexl")
-#write_xlsx(aic.tab2,here("updated_aic.tab2.xlsx"))
 ```
 
 # FIGURES
 ### Gamma hab
 ```{r}
 ### Gamma ####
-g5k <- glm(gamma_FS ~ fc_5km, data=data_div, family= Gamma (link = "identity"))
-
+# r2(g.fs) # 0.55
 ## prediction g2
 new <- data.frame(fc_5km = seq(min(data_div$fc_5km),max(data_div$fc_5km), length.out=50))
-preds <- predict(g5k, type="response", newdata=new, se.fit=T)
+preds <- predict(g.fs, type="response", newdata=new, se.fit=T)
 
 new$pred <- preds$fit
 new$ic.up <- preds$fit + preds$se.fit*1.96 
 new$ic.low <- preds$fit - preds$se.fit*1.96 
 
-g3k <- glm(gamma_NFS ~ fc_3km, data=data_div, family= Gamma (link = "identity"))
+# r2(g.nfs) # 0.73
+
 ## prediction g1
 new2 <- data.frame(fc_3km = seq(min(data_div$fc_3km),max(data_div$fc_3km), length.out=50))
-preds2 <- predict(g3k, type="response", newdata=new2, se.fit=T)
+preds2 <- predict(g.nfs, type="response", newdata=new2, se.fit=T)
 
 new2$pred <- preds2$fit
 new2$ic.up <- preds2$fit + preds2$se.fit*1.96 
@@ -1036,26 +1034,27 @@ new2$ic.low <- preds2$fit - preds2$se.fit*1.96
     ylim(0,max(data_div[2:7])+0.5) + 
     # scale_x_reverse() +
     annotate("text", y=20.5, x=38,colour= "#0072B2",
-             label=expression(paste(~ R^2 ~ "= 0.66"))) +
+             label=expression(paste(~ R^2 ~ "= 0.55"))) +
     annotate("text", y=19, x=40, colour= "#D55E00",
-             label=expression(paste(~ R^2 ~ "= 0.74"))) + labs(tag="a"))
+             label=expression(paste(~ R^2 ~ "= 0.73"))) + labs(tag="a"))
 ```
 
 ### Alpha hab
 ```{r}
-a5k <- glm(alpha_FS ~ fc_5km, data=data_div, family= Gamma (link = "identity"))
+# r2(a.fs) # 0.38
+
 ## prediction a2
 new <- data.frame(fc_5km = seq(min(data_div$fc_5km),max(data_div$fc_5km), length.out=50))
-preds <- predict(a5k, type="response", newdata=new, se.fit=T)
+preds <- predict(a.fs, type="response", newdata=new, se.fit=T)
 
 new$pred <- preds$fit
 new$ic.up <- preds$fit + preds$se.fit*1.96 
 new$ic.low <- preds$fit - preds$se.fit*1.96 
 
-a3k <- glm(alpha_NFS ~ fc_3km, data=data_div, family= Gamma (link = "identity"))
+# r2(a.nfs) # 0.63
 ## prediction a1
 new2 <-  data.frame(fc_3km = seq(min(data_div$fc_3km),max(data_div$fc_3km), length.out=50))
-preds <- predict(a3k, type="response", newdata=new2, se.fit=T)
+preds <- predict(a.nfs, type="response", newdata=new2, se.fit=T)
 
 new2$pred <- preds$fit
 new2$ic.up <- preds$fit + preds$se.fit*1.96 
@@ -1063,7 +1062,8 @@ new2$ic.low <- preds$fit - preds$se.fit*1.96
 
 ## Plot Alpha richness ~ fc_3km
 (a.hab <- ggplot(data= new, aes(x=fc_5km, y=pred)) + 
-  geom_line(data= new, aes(x=fc_5km, y=pred), col= "#0072B2", alpha= .5, linetype= "dashed") +
+  geom_line(data= new, aes(x=fc_5km, y=pred), col= "#0072B2", 
+            alpha= .5, linetype= "dashed") +
   # geom_ribbon(data= new, aes(x=fc_5km , ymax=ic.up, ymin=ic.low), alpha=0.1, fill= "#0072B2") +
   geom_point(data=data_div, aes(x=fc_5km, y=alpha_FS), col= "#0072B2") +
   geom_line(data= new2, aes(x=fc_3km, y=pred), col= "#D55E00") +
@@ -1087,20 +1087,21 @@ new2$ic.low <- preds$fit - preds$se.fit*1.96
 ### Beta hab
 ```{r}
 ### Beta add  ####
-b5k <- glm(betad_FS ~ fc_5km, data=data_div, family= Gamma (link = "identity"))
+# r2(b.fs) # 0.58
+
 ## prediction b1
 new <- data.frame(fc_5km = seq(min(data_div$fc_5km),max(data_div$fc_5km), length.out=50))
-preds <- predict(b5k, type="response", newdata=new, se.fit=T)
+preds <- predict(b.fs, type="response", newdata=new, se.fit=T)
 
 new$pred <- preds$fit
 new$ic.up <- preds$fit + preds$se.fit*1.96 
 new$ic.low <- preds$fit - preds$se.fit*1.96 
 
-b3k <- glm(betad_NFS ~ fc_3km, data=data_div, family= Gamma (link = "identity"))
+# r2(b.nfs) # 0.65
 
 ## prediction b1
 new2 <-  data.frame(fc_3km = seq(min(data_div$fc_3km),max(data_div$fc_3km), length.out=50))
-preds <- predict(b3k, type="response", newdata=new2, se.fit=T)
+preds <- predict(b.nfs, type="response", newdata=new2, se.fit=T)
 
 new2$pred <- preds$fit
 new2$ic.up <- preds$fit + preds$se.fit*1.96 
@@ -1135,20 +1136,22 @@ ggsave("figures/plot.hab.jpeg",units="cm", width=20, height=8, dpi=300)
 ### Total abundance FS & NFS
 ```{r}
 ## FS
-gab1 <- glm.nb(ab.land_FS ~ fc_5km, data=data_div)
+# r2(gab.fs) # 0.44
+
 ## prediction gab1
 new <- data.frame(fc_5km = seq(min(data_div$fc_5km),max(data_div$fc_5km), length.out=50))
-preds <- predict(gab1, type="response", newdata=new, se.fit=T)
+preds <- predict(gab.fs, type="response", newdata=new, se.fit=T)
 
 new$pred <- preds$fit
 new$ic.up <- preds$fit + preds$se.fit*1.96 
 new$ic.low <- preds$fit - preds$se.fit*1.96 
 
 ## NFS
-gab1 <- glm.nb(ab.land_NFS ~ fc_5km, data=data_div)
+# r2(gab.nfs) # 0.82
+
 ## prediction gab2
 new2 <- new
-preds <- predict(gab1, type="response", newdata=new2, se.fit=T)
+preds <- predict(gab.nfs, type="response", newdata=new2, se.fit=T)
 
 new2$pred <- preds$fit
 new2$ic.up <- preds$fit + preds$se.fit*1.96 
@@ -1175,20 +1178,22 @@ new2$ic.low <- preds$fit - preds$se.fit*1.96
 ### Beta RC FS & NFS
 ```{r}
 ## FS
-rc2 <- lm(brc.fsNA ~ fc_3km +  I(fc_3km^2), data=data_div)
+# ## NULL ## r2(rc1.fs) 
+
 ## prediction rc2.2 and rc2
 new <- data.frame(fc_3km = seq(min(data_div$fc_3km),max(data_div$fc_3km), length.out=30))
-preds <- predict(rc2, type="response", newdata=new, se.fit=T)
+preds <- predict(rc1.fs, type="response", newdata=new, se.fit=T)
 
 new$pred <- preds$fit
 new$ic.up <- preds$fit + preds$se.fit*1.96 
 new$ic.low <- preds$fit - preds$se.fit*1.96 
 
 ## NFS
-rc1 <- lm(brc.nfsNA ~ fc_3km, data=data_div)
+# r2(rc1.nfs) # 0.25
+
 ## prediction rc2
 new2 <- data.frame(fc_3km = seq(min(data_div$fc_3km),max(data_div$fc_3km), length.out=50))
-preds <- predict(rc1, type="response", newdata=new2, se.fit=T)
+preds <- predict(rc1.nfs, type="response", newdata=new2, se.fit=T)
 
 new2$pred <- preds$fit
 new2$ic.up <- preds$fit + preds$se.fit*1.96 
@@ -1208,9 +1213,9 @@ new2$ic.low <- preds$fit - preds$se.fit*1.96
         legend.position = 'none') + ylim(-1,1) + 
     # scale_x_reverse() +
   annotate("text", y=0.9, x=43, alpha= .5, colour= "#D33E00",
-           label=expression(paste(~ R^2 ~ "= 0.17"))) +
-  annotate("text", y=0.7, x=43, alpha= .5, colour= "#0072B2",
-           label=expression(paste(~ R^2 ~ "= 0.44"))) +
+           label=expression(paste(~ R^2 ~ "= 0.25"))) +
+  # annotate("text", y=0.7, x=43, alpha= .5, colour= "#0072B2",
+           # label=expression(paste(~ R^2 ~ "= 0.30"))) +
   # annotate("text", y=0.9, x=43, colour= "#D33E00",
   #          label=expression(paste(beta, "(SE) = -0.06(0.03); " ~ R^2 ~ "= 0.37"))) +
   # annotate("text", y=0.8, x=43, colour= "#0072B2",
@@ -1219,20 +1224,22 @@ new2$ic.low <- preds$fit - preds$se.fit*1.96
 ```
 Beta RC abund FS & NFS
 ```{r}
-rc2 <- lm(brc.abund.fsNA ~ fc_5km, data=data_div)
+# r2(rc2.fs) # 0.41
+
 ## prediction rc2
 new <- data.frame(fc_5km = seq(min(data_div$fc_5km),max(data_div$fc_5km), length.out=50))
-preds <- predict(rc2, type="response", newdata=new, se.fit=T)
+preds <- predict(rc2.fs, type="response", newdata=new, se.fit=T)
 
 new$pred <- preds$fit
 new$ic.up <- preds$fit + preds$se.fit*1.96 
 new$ic.low <- preds$fit - preds$se.fit*1.96 
 
 ## NFS
-rc1 <- lm(brc.abund.nfsNA ~ fc_3km, data=data_div)
+# r2(rc2.nfs) # 0.21
+
 ## prediction rc1
 new2 <- data.frame(fc_3km = seq(min(data_div$fc_3km),max(data_div$fc_3km), length.out=50))
-preds <- predict(rc1, type="response", newdata=new2, se.fit=T)
+preds <- predict(rc2.nfs, type="response", newdata=new2, se.fit=T)
 
 new2$pred <- preds$fit
 new2$ic.up <- preds$fit + preds$se.fit*1.96 
