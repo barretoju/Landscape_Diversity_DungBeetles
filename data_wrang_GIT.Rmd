@@ -27,21 +27,21 @@ data <- read.csv(here("datasets", "beetles_biodiversity.csv"), header = TRUE,
 
 ### Remove singletons:
 
-Check species of only one individual collected in the whole project to remove it. The detected singletons from forests are: Canthon.histrio, Canthon.podagricus, Coprophanaeus.bellicosus, Deltochilum.sp., Dichotomius.bos, Uroxys.aff.brevis.
+Check species of only one individual collected in the whole project to remove it. The detected singletons from forests are:
 ```{r, echo=T}
 spp_all <- data %>% 
   dplyr::select(-Landscape, -Point, -Trap_num,-Year,
                 -Month,-Day,-Muncipality,-Lat,-Long,-Alt)
-sort(colSums(spp_all)) 
+
+(singletons <- data.frame(sort(colSums(spp_all))) %>% 
+  filter(sort.colSums.spp_all..==1) %>% 
+  rownames() )
 
 ### we have 6 project singletons
 
 # remove those project singletons from data
 data2 <- data %>% 
-  dplyr::select( -Canthon.histrio, -Canthon.podagricus,
-                 -Coprophanaeus.bellicosus, -Deltochilum.sp.,
-                 -Dichotomius.bos, -Uroxys.aff.brevis )
-
+  dplyr::select(-all_of(singletons))
 ```
 ### Tidy format for analyses
 
@@ -50,7 +50,7 @@ For now we have species per column in the abundance matrix per pitfall, tidy for
 ```{r}
 data3 <- data2 %>% 
   dplyr::select(-Trap_num,-Year,-Month,-Day,-Muncipality,-Lat,-Long,-Alt) %>%
-  group_by(Landscape,Point) %>% summarise_all(sum) %>% gather("spp","abundance",3:53)
+  group_by(Landscape,Point) %>% summarise_all(sum) %>% gather("spp","abundance",3:52)
 
 # rename data 5 so I can remember what it stands for
 beetles <- data3
@@ -64,14 +64,28 @@ Dataset containing trait information of each species to classify into habitat as
 hab.data <- read.csv(here("datasets", "2022nov_spp_trait_revFB.csv"), 
                      sep= ";", header= T) %>%
   filter(Code %in% unique(beetles$spp)) %>%
-  dplyr::select(-Genus, -spp) %>%
+  dplyr::select(-spp) %>%
   dplyr::rename("spp"= Code)
-# hab.data %>% tabyl(Classification)
-# Classification  n percent
-#              FS 27    0.54
-#             NFS 23    0.46
+ 
+# # # of species 50
+# length(unique(hab.data$spp))
+# 
+# # # of genus 17
+# length(unique(hab.data$Genus))
 
-# change!
+# # spp per class
+hab.data %>% tabyl(Classification)
+
+# # # of individuals per class (need to run beta RC)
+# b.com %>% ungroup() %>%
+#   dplyr::select(all_of(fs.spp)) %>%
+#   sum()
+#   
+# b.com %>% ungroup() %>%
+#   dplyr::select( all_of(nfs.spp)) %>%
+#   sum()
+
+
 ```
 
 
@@ -79,12 +93,9 @@ hab.data <- read.csv(here("datasets", "2022nov_spp_trait_revFB.csv"),
 
 Data on forest cover percentage of the 12 focal landscapes measured at a 3 and 5 km radius measured based in MapBiomas maps in June 2019. We used the Sampling Design tool in ArcGIS 10.1 to calculate the percentage of native forest cover in circular buffers of 3km and 5km radii around the landscape’s centroids.
 
-Contact	Julia Rodrigues Barreto
-	USP Sao Paulo
-	barretoj@usp.br
-
 ```{r}
-env.data <- read.csv(here("datasets", "perc_fc_JB.csv"), sep = ";", dec = ",") %>% 
+env.data <- read.csv(here("datasets", "perc_fc_JB.csv"), 
+                     sep = ";", dec = ",") %>% 
               dplyr::rename(fc_3km= perfc_3km, fc_5km= perfc_5km) %>%
   dplyr::select(Landscape, fc_3km, fc_5km)
 ```
@@ -95,7 +106,6 @@ env.data <- read.csv(here("datasets", "perc_fc_JB.csv"), sep = ";", dec = ",") %
 
 Using two datasets separated into habitat association classes: FS- forest specialists and NFS- non-forest specialists.
 ```{r}
-
 alpha_hab <- beetles %>% mutate(occurrence= 1*(abundance>0)) %>%
   left_join(hab.data,by= "spp") %>%
   group_by(Landscape,Point, Classification) %>% 
@@ -162,7 +172,6 @@ source(here("scripts", "raup_crick_modif.R"))
 source(here("scripts", "rc_qrand_modif.R"))
 ```
 
-
 Start from community matrix (spp x site) and subset it for each group, as we treat it separately:
 ```{r}
 ## community data (sppXsite matrix) - entry for beta RC calculations
@@ -177,7 +186,6 @@ nfs.spp <-  hab.data %>% filter(Classification=="NFS") %>% pull(spp)
 # sitXsp datasets for each
 b.com.fs <- b.com %>% dplyr::select(Landscape, Point, all_of(fs.spp))
 b.com.nfs <- b.com %>% dplyr::select(Landscape, Point, all_of(nfs.spp))
-
 ```
 
 
@@ -239,7 +247,6 @@ ttes <- modify_depth(ttes, 1, as.dist)
 rc.df.nfs$brc.nfsNA <- map_dbl(ttes, mean, na.rm=T)
 ```
 
-
 ## Abundance-based Beta RC for FS and NFS:
 
 First for Forest specialists, then for non-forest specialists, we set a regional species group, caculate beta and transform zero occurrence sites in NA to remove it from calculations.
@@ -276,7 +283,9 @@ rc.df.abund.fs$brc.abund.fsNA <- map_dbl(ttes, mean, na.rm= T)
 #### NFS ####
 
 ## set regional spp pool
-reg.pool.nfs <- b.com.nfs %>% ungroup() %>% dplyr::select(-Landscape, -Point) %>% summarise_all(sum) %>% gather("spp","abund",1:23)
+reg.pool.nfs <- b.com.nfs %>% ungroup() %>% 
+  dplyr::select(-Landscape, -Point) %>% 
+  summarise_all(sum) %>% gather("spp","abund",1:22)
 reg.pool.nfs <- as.data.frame(reg.pool.nfs)
 
 rc.df.abund.nfs <- data.frame(Landscape=NA, brc.abund.nfs.raw=NA)
