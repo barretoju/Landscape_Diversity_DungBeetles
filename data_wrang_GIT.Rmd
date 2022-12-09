@@ -94,11 +94,17 @@ hab.data %>% tabyl(Classification)
 Data on forest cover percentage of the 12 focal landscapes measured at a 3 and 5 km radius measured based in MapBiomas maps in June 2019. We used the Sampling Design tool in ArcGIS 10.1 to calculate the percentage of native forest cover in circular buffers of 3km and 5km radii around the landscape’s centroids.
 
 ```{r}
-env.data <- read.csv(here("datasets", "perc_fc_JB.csv"), 
-                     sep = ";", dec = ",") %>% 
-              dplyr::rename(fc_3km= perfc_3km, fc_5km= perfc_5km) %>%
-  dplyr::select(Landscape, fc_3km, fc_5km)
+env.data <- read.csv(here("datasets", "perc_fc_JB.csv")) %>%
+  dplyr::select(Landscape, fc_3km, fc_5km, x, y)
 ```
+
+Data structure:
+- Landscape: numeric codes for each of 12 landscapes.
+- area_forest: forest cover area, we defined as forest those remnants at an intermediate (ca 10 years) or advanced successional stages.
+- sum_classes: sum of land cover classes within that landscape
+- perfc_3km or perfc_5km: forest cover percent calculated from the two entries above
+Columns 5 to 7 contain the same columns, but for 5km scale.
+- x and y are geographical coordinates of landscape centroids
 
 # CALCULATING METRICS
 
@@ -249,12 +255,10 @@ rc.df.nfs$brc.nfsNA <- map_dbl(ttes, mean, na.rm=T)
 
 ## Abundance-based Beta RC for FS and NFS:
 
-First for Forest specialists, then for non-forest specialists, we set a regional species group, caculate beta and transform zero occurrence sites in NA to remove it from calculations.
+First for Forest specialists, then for non-forest specialists, we set a regional species group, calculate beta and transform zero occurrence sites in NA to remove it from calculations.
 
 Final Beta Raup-Crick, both presence-absence abundance-based, below:
 ```{r}
-
-##### RAUP-CRICK ABUNDANCE modif Puttker #####
 #### FS ####
 
 ## set regional spp pool

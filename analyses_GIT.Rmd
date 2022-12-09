@@ -28,6 +28,7 @@ library(DHARMa)
 library(patchwork) #devtools::install_github("thomasp85/patchwork")
 library(kableExtra)
 library(janitor)
+library(sjPlot)
 library(ggpubr) # devtools::install_github("kassambara/ggpubr")
 ```
 
@@ -78,6 +79,9 @@ left_join(ab_hab %>% dplyr::select(1:3), by= "Landscape") %>%
 
 kable(data_div, booktabs = TRUE) %>%
   kable_styling(font_size = 12)
+
+## geographical coordinates for spatial autocorr tests:
+
 ```
 
 
@@ -110,13 +114,19 @@ summary(g5k)
 g.fs <- g5k# rename top model to save and plot below
 ```
 
-### Inspect residuals:
+### Residuals
 ```{r}
 sim <- simulateResiduals(g5k)
 plot(sim)
 testDispersion(sim)
 hnp::hnp(g5k)
 boot::glm.diag.plots(g5k) ## for glm poisson or neg binom
+```
+
+**Spatial autocorrelation**
+All Moran's I tests with our response variables to verify spatial auto-correlation resulted in non-significant which means non spatially auto-correlated. 
+```{r}
+testSpatialAutocorrelation(sim, x =  env.data$x, y = env.data$y)
 ```
 
 
@@ -137,7 +147,7 @@ aic.tab <- tibble("Diversity"= c("Gamma FS"),
                   "r2"= c(round(g5k.r2$R2_Nagelkerke,2)))
 ```
 
-### Prediction:
+### Prediction
 ```{r prediction and plot for gamma fs, echo=F}
 new <- data.frame(fc_5km = seq(min(data_div$fc_5km),max(data_div$fc_5km), length.out=50))
 preds <- predict(g5k, type="response", newdata=new, se.fit=T)
@@ -182,13 +192,18 @@ summary(a5k)
 a.fs <- a5k# rename top model to save and plot below
 ```
 
-### Inspect residuals:
+### Residuals
 ```{r}
 sim <- simulateResiduals(a5k)
 plot(sim)
 testDispersion(sim)
 hnp::hnp(a5k)
 boot::glm.diag.plots(a5k)
+```
+
+**Spatial autocorrelation**
+```{r}
+testSpatialAutocorrelation(sim, x =  env.data$x, y = env.data$y)
 ```
 
 ```{r,echo=F}
@@ -213,7 +228,7 @@ aic.tab <- rbind(aic.tab,
                  
 ```
 
-### Prediction:
+### Prediction
 ```{r prediction and plot for alpha fs, echo=F}
 ## prediction a5k
 new <- data.frame(fc_5km = seq(min(data_div$fc_5km),max(data_div$fc_5km), length.out=50))
@@ -256,13 +271,18 @@ summary(b5k)
 b.fs <- b5k # rename top model to save and plot below
 ```
 
-### Inspect residuals:
+### Residuals
 ```{r}
 sim <- simulateResiduals(b5k)
 plot(sim)
 testDispersion(sim) # ok
 hnp::hnp(b5k) ## for glm Gamma or neg binom (maybe also others)
 boot::glm.diag.plots(b5k) ## for glm Gamma or neg binom
+```
+
+**Spatial autocorrelation**
+```{r}
+testSpatialAutocorrelation(sim, x =  env.data$x, y = env.data$y)
 ```
 
 ```{r aic table entries for beta add fs,echo=F}
@@ -329,12 +349,16 @@ summary(rc3kq)
 rc1.fs <- rc0# rename top model to save and plot below
 ```
 
-### Inspect residuals:
+### Residuals
 ```{r resid rc rich fs ~ fc}
 sim <- simulateResiduals(rc3kq)
 plot(sim)
 testDispersion(sim) # ok
 hnp::hnp(rc3kq)
+```
+**Spatial autocorrelation**
+```{r}
+testSpatialAutocorrelation(sim, x =  env.data$x, y = env.data$y)
 ```
 
 
@@ -359,7 +383,7 @@ aic.tab <- rbind(aic.tab, c("RCbeta (P/A-based) FS",
 
 ```
 
-### Prediction:
+### Prediction
 ```{r , echo=F}
 ## prediction rc5kq and rc5k
 new <- data.frame(fc_3km = seq(min(data_div$fc_3km),max(data_div$fc_3km), length.out=30))
@@ -403,13 +427,18 @@ summary(gab5k)
 gab.fs <- gab5k# rename top model to save and plot below
 ```
 
-### Inspect residuals:
+### Residuals
 ```{r}
 sim <- simulateResiduals(gab5k)
 plot(sim)
 testDispersion(sim)
 hnp::hnp(gab5k)
 boot::glm.diag.plots(gab5k)
+```
+
+**Spatial autocorrelation**
+```{r}
+testSpatialAutocorrelation(sim, x =  env.data$x, y = env.data$y)
 ```
 
 ```{r}
@@ -439,7 +468,7 @@ aic.tab <- rbind(aic.tab, c("Total abundance FS",
                             round(gab3k.r2$R2_Nagelkerke,2)))
 ```
 
-### Prediction:
+### Prediction
 ```{r gab.fs, echo=F}
 ## prediction gab5k
 new <- data.frame(fc_5km = seq(min(data_div$fc_5km),max(data_div$fc_5km), length.out=50))
@@ -461,7 +490,7 @@ ggplot(new, aes(x=fc_5km, y=pred)) +
 
 ## bRaup-Crick (abundance-based)
 
-### Modelling:
+### Modelling
 ```{r modeling beta RC fs2}
 ### LM gamma for regular model selection
 rc0 <- lm(brc.abund.fsNA ~ 1, data=data_div)
@@ -482,7 +511,7 @@ summary(rc5k)
 rc2.fs <- rc5k# rename top model to save and plot below
 ```
 
-### Inspect residuals:
+### Residuals
 ```{r resid rc abund fs2 ~ fc}
 sim <- simulateResiduals(rc5k)
 plot(sim)
@@ -490,6 +519,10 @@ testDispersion(sim) # ok
 hnp::hnp(rc5k)
 ```
 
+**Spatial autocorrelation**
+```{r}
+testSpatialAutocorrelation(sim, x =  env.data$x, y = env.data$y)
+```
 
 ```{r, echo=F}
 # R2 based on Nakagawa et al. 2017: variação explicada pelos efeitos fixos dividida pela total
@@ -535,7 +568,7 @@ ggplot(new, aes(x=fc_5km, y=pred)) + geom_line() +
 # NON-FOREST SPECIALISTS
 ## Gamma diversity
 
-### Modelling:
+### Modelling
 ```{r ## Modelling Gamma diversity of nfs spp}
 ### LM alpha for regular model selection
 g0 <- glm(gamma_NFS ~ 1, data=data_div, family= Gamma (link = "identity"))
@@ -558,13 +591,18 @@ summary(g3k)
 g.nfs <- g3k # rename top model to save and plot below
 ```
 
-### Inspect residuals:
+### Residuals
 ```{r}
 sim <- simulateResiduals(g3k)
 plot(sim)
 testDispersion(sim) # a lil under
 hnp::hnp(g3k) ## for glm poisson or neg binom (maybe also others)
 boot::glm.diag.plots(g3k) ## for glm poisson or neg binom
+```
+
+**Spatial autocorrelation**
+```{r}
+testSpatialAutocorrelation(sim, x =  env.data$x, y = env.data$y)
 ```
 
 ```{r,echo=F}
@@ -583,7 +621,7 @@ aic.tab <- rbind(aic.tab,
                  )
 ```
 
-### Prediction:
+### Prediction
 ```{r prediction and plot for gamma nfs, echo=F}
 ## prediction g3k
 new <- data.frame(fc_3km = seq(min(data_div$fc_3km),max(data_div$fc_3km), length.out=30))
@@ -603,7 +641,7 @@ ggplot(new, aes(x=fc_3km, y=pred)) + geom_line() +
 
 ## Alpha diversity
 
-### Modelling:
+### Modelling
 ```{r ## Modelling Alpha diversity of nfs spp}
 ### LM alpha for regular model selection
 a0 <- glm(alpha_NFS ~ 1, data=data_div, family= Gamma (link = "identity"))
@@ -625,13 +663,18 @@ summary(a3k)
 a.nfs <- a3k # rename top model to save and plot below
 ```
 
-### Inspect residuals:
+### Residuals
 ```{r}
 sim <- simulateResiduals(a3k)
 plot(sim)
 testDispersion(sim) # a lil under
 hnp::hnp(a3k) ## for glm poisson or neg binom (maybe also others)
 boot::glm.diag.plots(a3k) ## for glm poisson or neg binom
+```
+
+**Spatial autocorrelation**
+```{r}
+testSpatialAutocorrelation(sim, x =  env.data$x, y = env.data$y)
 ```
 
 ```{r,echo=F}
@@ -656,7 +699,7 @@ aic.tab <- rbind(aic.tab,
                   round(a5k.r2$R2_Nagelkerke,2)))
 ```
 
-### Prediction:
+### Prediction
 ```{r prediction and plot for alpha nfs, echo=F}
 ## prediction a5k
 new <- data.frame(fc_3km = seq(min(data_div$fc_3km),max(data_div$fc_3km), length.out=50))
@@ -701,7 +744,7 @@ summary(b3k)
 b.nfs <- b3k # rename top model to save and plot below
 ```
 
-### Inspect residuals:
+### Residuals
 ```{r}
 sim <- simulateResiduals(b3k)
 plot(sim)
@@ -709,6 +752,12 @@ testDispersion(sim)
 hnp::hnp(b3k) ## for glm poisson or neg binom (maybe also others)
 boot::glm.diag.plots(b3k) ## for glm poisson or neg binom
 ```
+
+**Spatial autocorrelation**
+```{r}
+testSpatialAutocorrelation(sim, x =  env.data$x, y = env.data$y)
+```
+
 
 ```{r aic table entries for beta add nfs,echo=F}
 # R2 based on Nakagawa et al. 2017: variação explicada pelos efeitos fixos dividida pela total
@@ -725,7 +774,7 @@ aic.tab <- rbind(aic.tab, c("Beta NFS",  "FC at 3km",
                  )
 ```
 
-### Prediction:
+### Prediction
 ```{r prediction and plot for beta additive nfs, echo=F}
 ## prediction b5k
 new <- data.frame(fc_3km = seq(min(data_div$fc_3km),max(data_div$fc_3km), length.out=50))
@@ -768,12 +817,18 @@ rc3kq <- lm(brc.nfsNA ~ fc_3km +  I(fc_3km^2), data=data_div)
 summary(rc3k)
 rc1.nfs <- rc3k # rename top model to save and plot below
 ```
-### Inspect residuals:
+
+### Residuals
 ```{r resid rc rich nfs ~ fc}
 sim <- simulateResiduals(rc3k)
 plot(sim)
 testDispersion(sim) # a lil under
 hnp::hnp(rc3k)
+```
+
+**Spatial autocorrelation**
+```{r}
+testSpatialAutocorrelation(sim, x =  env.data$x, y = env.data$y)
 ```
 
 ```{r, echo=F}
@@ -803,7 +858,7 @@ aic.tab <- rbind(aic.tab, c("RCbeta (P/A-based) NFS",
                             round(rc5k.r2$R2_adjusted,2)))
 ```
 
-### Prediction:
+### Prediction
 ```{r , echo=F}
 ## prediction rc5kq and rc5k
 new <- data.frame(fc_3km = seq(min(data_div$fc_3km),max(data_div$fc_3km), length.out=50))
@@ -825,7 +880,7 @@ ggplot(new, aes(x=fc_3km, y=pred)) +
 
 ## Total abundance
 
-### Modelling:
+### Modelling
 ```{r tot abund nfs}
 
 ### LM "gamma"  abundanec for regular model selection
@@ -846,13 +901,19 @@ gab3kq <- glm.nb(ab.land_NFS ~ fc_3km +  I(fc_3km^2), data=data_div)
 summary(gab5k)
 gab.nfs <- gab5k # rename top model to save and plot below
 ```
-### Inspect residuals:
+
+### Residuals
 ```{r}
 sim <- simulateResiduals(gab5k)
 plot(sim)
 testDispersion(sim) # a lil under
 hnp::hnp(gab5k)
 boot::glm.diag.plots(gab5k)
+```
+
+**Spatial autocorrelation**
+```{r}
+testSpatialAutocorrelation(sim, x =  env.data$x, y = env.data$y)
 ```
 
 ```{r}
@@ -884,7 +945,7 @@ aic.tab <- rbind(aic.tab, c("Total abundance NFS",
                  ))
 ```
 
-### Prediction:
+### Prediction
 ```{r gab.nfs, echo=F}
 ## prediction gab5k
 new <- data.frame(fc_5km = seq(min(data_div$fc_5km),max(data_div$fc_5km), length.out=50))
@@ -927,12 +988,17 @@ summary(rc3k)
 rc2.nfs <- rc3k # rename top model to save and plot below
 ```
 
-### Inspect residuals:
+### Residuals
 ```{r}
 sim <- simulateResiduals(rc3k)
 plot(sim)
 testDispersion(sim) # a lil under
 hnp::hnp(rc3k)
+```
+
+**Spatial autocorrelation**
+```{r}
+testSpatialAutocorrelation(sim, x =  env.data$x, y = env.data$y)
 ```
 
 ```{r, echo=F}
@@ -962,7 +1028,7 @@ aic.tab <- rbind(aic.tab, c("RCbeta (abund-based) NFS",
                    round(rc5k.r2$R2_adjusted,2)))
 ```
 
-### Prediction:
+### Prediction
 ```{r , echo=F}
 ## prediction rc5k
 new <- data.frame(fc_3km = seq(min(data_div$fc_3km),max(data_div$fc_3km), length.out=50))
@@ -990,6 +1056,28 @@ kable(aic.tab, booktabs=T, row.names = F,caption= "Table S2. AICc-based selected
     row_spec(seq(1, nrow(aic.tab), 2), bold= T)
 
 ```
+
+# MODEL COEFFICIENTS TABLE
+
+```{r}
+# fazer tabela de coeficientes dos modelos selectionados
+(tab_gfs <- tab_model(g.fs, show.p = F, show.se = TRUE))
+(tab_afs <- tab_model(a.fs, show.p = F, show.se = TRUE))
+(tab_bfs <- tab_model(b.fs, show.p = F, show.se = TRUE))
+(tab_brc1fs <- tab_model(rc1.fs, show.p = F, show.se = TRUE))
+(tab_gabfs <- tab_model(gab.fs, show.p = F, show.se = TRUE))
+(tab_brc2fs <- tab_model(rc2.fs, show.p = F, show.se = TRUE))
+
+
+    # Nnfs
+(tab_gnfs <- tab_model(g.nfs, show.p = F, show.se = TRUE))
+(tab_anfs <- tab_model(a.nfs, show.p = F, show.se = TRUE))
+(tab_bnfs <- tab_model(b.nfs, show.p = F, show.se = TRUE))
+(tab_brc1nfs <- tab_model(rc1.nfs, show.p = F, show.se = TRUE))
+(tab_gabnfs <- tab_model(gab.nfs, show.p = F, show.se = TRUE))
+(tab_brc2nfs <- tab_model(rc2.nfs, show.p = F, show.se = TRUE))
+```
+
 
 # FIGURES
 ### Gamma hab

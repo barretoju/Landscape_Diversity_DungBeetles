@@ -59,8 +59,10 @@ Contact	Julia Rodrigues Barreto
 	USP Sao Paulo
 	barretoj@usp.br
 
-Landscape
+Data structure:
+- Landscape: numeric codes for each of 12 landscapes.
 - area_forest: forest cover area, we defined as forest those remnants at an intermediate (ca 10 years) or advanced successional stages.
 - sum_classes: sum of land cover classes within that landscape
 - perfc_3km or perfc_5km: forest cover percent calculated from the two entries above
 Columns 5 to 7 contain the same columns, but for 5km scale.
+- x and y are geographical coordinates of landscape centroids
