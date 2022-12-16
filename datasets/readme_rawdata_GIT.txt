@@ -39,7 +39,7 @@ Contact	Fernando Augusto B. Silva
 	UFRP, Universidade Federal Rural de Pernambuco
 	fernandoabsilva@yahoo.com.br
 
-
+Data structure:
 - Reference: reference study where trait information of species can be found, including personal records from the taxonomist
 - Genus
 - spp
