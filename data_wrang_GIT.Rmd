@@ -1,13 +1,13 @@
 ---
 title: "Data wrangling for beetles biodiversity"
 author: "Julia Barreto"
-date: "8/23/2019"
+date: "`r Sys.Date()`"
 output: 
   rmdformats::readthedown
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(cache = T, message = F, warning = F, error= F)
+knitr::opts_chunk$set(cache = F, message = F, warning = F, error= F)
 library(here)
 library(tidyverse)
 library(kableExtra)
@@ -257,7 +257,7 @@ rc.df.nfs$brc.nfsNA <- map_dbl(ttes, mean, na.rm=T)
 
 First for Forest specialists, then for non-forest specialists, we set a regional species group, calculate beta and transform zero occurrence sites in NA to remove it from calculations.
 
-Final Beta Raup-Crick, both presence-absence abundance-based, below:
+Final Beta Raup-Crick, both presence-absence and abundance-based, below:
 ```{r}
 #### FS ####
 

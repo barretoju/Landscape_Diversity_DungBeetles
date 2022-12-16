@@ -1,7 +1,7 @@
 ---
 title: "BARRETO et al. 2022: Habitat loss and biodiversity gain (BIOCON-S-22-00746)"
 author: "Julia Barreto"
-date: "28/9/2022"
+date: "`r Sys.Date()`"
 output:
   rmdformats::readthedown:
     highlight: kate

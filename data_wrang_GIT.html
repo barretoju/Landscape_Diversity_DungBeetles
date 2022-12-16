@@ -7,6 +7,7 @@
 
         <meta name="author" content="Julia Barreto" />
     
+        <meta name="date" content="2022-12-16" />
     
     <title>Data wrangling for beetles biodiversity</title>
 
@@ -1534,7 +1535,7 @@ biodiversity</a></h2>
     <div id="postamble" data-toggle="wy-nav-shift" class="status">
                   <p class="author"><span class="glyphicon glyphicon-user"></span> Julia
 Barreto</p>
-                        <p class="date"><span class="glyphicon glyphicon-calendar"></span> 8/23/2019</p>
+                        <p class="date"><span class="glyphicon glyphicon-calendar"></span> 2022-12-16</p>
           </div>
    </div>
      
@@ -1554,78 +1555,22 @@ Barreto</p>
 <div id="remove-singletons" class="section level3">
 <h3>Remove singletons:</h3>
 <p>Check species of only one individual collected in the whole project
-to remove it. The detected singletons from forests are: Canthon.histrio,
-Canthon.podagricus, Coprophanaeus.bellicosus, Deltochilum.sp.,
-Dichotomius.bos, Uroxys.aff.brevis.</p>
+to remove it. The detected singletons from forests are:</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>spp_all <span class="ot">&lt;-</span> data <span class="sc">%&gt;%</span> </span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="sc">-</span>Landscape, <span class="sc">-</span>Point, <span class="sc">-</span>Trap_num,<span class="sc">-</span>Year,</span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>                <span class="sc">-</span>Month,<span class="sc">-</span>Day,<span class="sc">-</span>Muncipality,<span class="sc">-</span>Lat,<span class="sc">-</span>Long,<span class="sc">-</span>Alt)</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="fu">sort</span>(<span class="fu">colSums</span>(spp_all)) </span></code></pre></div>
-<pre><code>##                 Canthon.histrio              Canthon.podagricus 
-##                               1                               1 
-##        Coprophanaeus.bellicosus                 Deltochilum.sp. 
-##                               1                               1 
-##                 Dichotomius.bos               Uroxys.aff.brevis 
-##                               1                               1 
-##                 Dichotomius.sp4              Dichotomius.fissus 
-##                               2                               2 
-##                  Trichillum.sp.                 Dichotomius.sp3 
-##                               2                               3 
-##           Eurysternus.hirtellus                      Uroxys.sp3 
-##                               3                               3 
-##           Canthon.aff.luctuosus                      Uroxys.sp4 
-##                               4                               4 
-##          Coprophanaeus.cerberus                 Dichotomius.sp5 
-##                               5                               5 
-##      Dichotomius.depressicollis                 Dichotomius.sp2 
-##                               5                               7 
-##       Canthon.virens.chalybaeus              Canthon.chalybaeus 
-##                               8                              10 
-##                 Onthophagus.sp4            Deltochilum.dentipes 
-##                              11                              13 
-##                 Onthophagus.sp3                      Uroxys.sp2 
-##                              13                              13 
-##        Paracanthon.monteiroorum        Coprophanaeus.saphirinus 
-##                              14                              19 
-##         Pseudocanthon.xanthurus                      Uroxys.sp1 
-##                              19                              21 
-##                 Dichotomius.sp1           Chalcocopris.hesperus 
-##                              24                              26 
-##             Paracanthon.rosinae       Sylvicanthon.foveiventris 
-##                              27                              27 
-##                Phanaeus.dejeani           Phanaeus.splendidulus 
-##                              32                              34 
-##         Deltochilum.morbillosum Dichotomius.aff.carbonarius.sp1 
-##                              35                              35 
-##           Eurysternus.francinae         Deltochilum.brasiliense 
-##                              38                              42 
-##       Dichotomius.quadrinodosus          Deltochilum.rubripenne 
-##                              45                              50 
-##            Deltochilum.furcatum            Ateuchus.carbonarius 
-##                              60                              64 
-##                 Onthophagus.sp2 Dichotomius.aff.carbonarius.sp2 
-##                              75                              83 
-##            Eurysternus.inflexus        Scybalocanthon.nigriceps 
-##                              84                              89 
-##                Ateuchus.volxemi          Canthon.aff.semiopacus 
-##                              90                             103 
-##               Ontherus.sulcator          Eurysternus.parallelus 
-##                             116                             226 
-##          Eurysternus.cyanescens              Dichotomius.mormon 
-##                             233                             254 
-##             Dichotomius.assifer           Canthon.ibarragrassoi 
-##                             278                             294 
-##           Canthon.aff.angularis                   Canthidium.sp 
-##                             347                             407 
-##                 Onthophagus.sp1 
-##                             598</code></pre>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>(singletons <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="fu">sort</span>(<span class="fu">colSums</span>(spp_all))) <span class="sc">%&gt;%</span> </span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(sort.colSums.spp_all..<span class="sc">==</span><span class="dv">1</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rownames</span>() )</span></code></pre></div>
+<pre><code>## [1] &quot;Canthon.histrio&quot;             &quot;Canthon.podagricus&quot;         
+## [3] &quot;Coprophanaeus.bellicosus&quot;    &quot;Deltochilum.Deltohyboma.sp.&quot;
+## [5] &quot;Dichotomius.bos&quot;             &quot;Uroxys.aff.brevis&quot;</code></pre>
 <div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="do">### we have 6 project singletons</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co"># remove those project singletons from data</span></span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>data2 <span class="ot">&lt;-</span> data <span class="sc">%&gt;%</span> </span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>( <span class="sc">-</span>Canthon.histrio, <span class="sc">-</span>Canthon.podagricus,</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>                 <span class="sc">-</span>Coprophanaeus.bellicosus, <span class="sc">-</span>Deltochilum.sp.,</span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>                 <span class="sc">-</span>Dichotomius.bos, <span class="sc">-</span>Uroxys.aff.brevis )</span></code></pre></div>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="sc">-</span><span class="fu">all_of</span>(singletons))</span></code></pre></div>
 </div>
 <div id="tidy-format-for-analyses" class="section level3">
 <h3>Tidy format for analyses</h3>
@@ -1635,7 +1580,7 @@ table longer to organize species abundance in rows instead of columns.
 Data product renamed as ‘beetles’.</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>data3 <span class="ot">&lt;-</span> data2 <span class="sc">%&gt;%</span> </span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="sc">-</span>Trap_num,<span class="sc">-</span>Year,<span class="sc">-</span>Month,<span class="sc">-</span>Day,<span class="sc">-</span>Muncipality,<span class="sc">-</span>Lat,<span class="sc">-</span>Long,<span class="sc">-</span>Alt) <span class="sc">%&gt;%</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Landscape,Point) <span class="sc">%&gt;%</span> <span class="fu">summarise_all</span>(sum) <span class="sc">%&gt;%</span> <span class="fu">gather</span>(<span class="st">&quot;spp&quot;</span>,<span class="st">&quot;abundance&quot;</span>,<span class="dv">3</span><span class="sc">:</span><span class="dv">53</span>)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Landscape,Point) <span class="sc">%&gt;%</span> <span class="fu">summarise_all</span>(sum) <span class="sc">%&gt;%</span> <span class="fu">gather</span>(<span class="st">&quot;spp&quot;</span>,<span class="st">&quot;abundance&quot;</span>,<span class="dv">3</span><span class="sc">:</span><span class="dv">52</span>)</span>
 <span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co"># rename data 5 so I can remember what it stands for</span></span>
 <span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>beetles <span class="ot">&lt;-</span> data3</span></code></pre></div>
@@ -1649,14 +1594,28 @@ expert taxonomist (Prof. Dr. Fernando Augusto B. Silva, coauthor)</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>hab.data <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="fu">here</span>(<span class="st">&quot;datasets&quot;</span>, <span class="st">&quot;2022nov_spp_trait_revFB.csv&quot;</span>), </span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>                     <span class="at">sep=</span> <span class="st">&quot;;&quot;</span>, <span class="at">header=</span> T) <span class="sc">%&gt;%</span></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Code <span class="sc">%in%</span> <span class="fu">unique</span>(beetles<span class="sc">$</span>spp)) <span class="sc">%&gt;%</span></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="sc">-</span>Genus, <span class="sc">-</span>spp) <span class="sc">%&gt;%</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="sc">-</span>spp) <span class="sc">%&gt;%</span></span>
 <span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">rename</span>(<span class="st">&quot;spp&quot;</span><span class="ot">=</span> Code)</span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="co"># hab.data %&gt;% tabyl(Classification)</span></span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Classification  n percent</span></span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="co">#              FS 27    0.54</span></span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="co">#             NFS 23    0.46</span></span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="co"># change!</span></span></code></pre></div>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a> </span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co"># # # of species 50</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="co"># length(unique(hab.data$spp))</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="co"># </span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="co"># # # of genus 17</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="co"># length(unique(hab.data$Genus))</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="co"># # spp per class</span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>hab.data <span class="sc">%&gt;%</span> <span class="fu">tabyl</span>(Classification)</span></code></pre></div>
+<pre><code>##  Classification  n percent
+##              FS 28    0.56
+##             NFS 22    0.44</code></pre>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># # # of individuals per class (need to run beta RC)</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="co"># b.com %&gt;% ungroup() %&gt;%</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co">#   dplyr::select(all_of(fs.spp)) %&gt;%</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co">#   sum()</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="co">#   </span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="co"># b.com %&gt;% ungroup() %&gt;%</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="co">#   dplyr::select( all_of(nfs.spp)) %&gt;%</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="co">#   sum()</span></span></code></pre></div>
 </div>
 <div id="forest-cover" class="section level2">
 <h2>FOREST COVER</h2>
@@ -1665,10 +1624,15 @@ at a 3 and 5 km radius measured based in MapBiomas maps in June 2019. We
 used the Sampling Design tool in ArcGIS 10.1 to calculate the percentage
 of native forest cover in circular buffers of 3km and 5km radii around
 the landscape’s centroids.</p>
-<p>Contact Julia Rodrigues Barreto USP Sao Paulo <a href="mailto:barretoj@usp.br" class="email">barretoj@usp.br</a></p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>env.data <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="fu">here</span>(<span class="st">&quot;datasets&quot;</span>, <span class="st">&quot;perc_fc_JB.csv&quot;</span>), <span class="at">sep =</span> <span class="st">&quot;;&quot;</span>, <span class="at">dec =</span> <span class="st">&quot;,&quot;</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>              dplyr<span class="sc">::</span><span class="fu">rename</span>(<span class="at">fc_3km=</span> perfc_3km, <span class="at">fc_5km=</span> perfc_5km) <span class="sc">%&gt;%</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(Landscape, fc_3km, fc_5km)</span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>env.data <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="fu">here</span>(<span class="st">&quot;datasets&quot;</span>, <span class="st">&quot;perc_fc_JB.csv&quot;</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(Landscape, fc_3km, fc_5km, x, y)</span></code></pre></div>
+<p>Data structure: - Landscape: numeric codes for each of 12 landscapes.
+- area_forest: forest cover area, we defined as forest those remnants at
+an intermediate (ca 10 years) or advanced successional stages. -
+sum_classes: sum of land cover classes within that landscape - perfc_3km
+or perfc_5km: forest cover percent calculated from the two entries above
+Columns 5 to 7 contain the same columns, but for 5km scale. - x and y
+are geographical coordinates of landscape centroids</p>
 </div>
 </div>
 <div id="calculating-metrics" class="section level1">
@@ -1677,31 +1641,31 @@ the landscape’s centroids.</p>
 <h2>ALPHA, BETA &amp; GAMMA: FS &amp; NFS</h2>
 <p>Using two datasets separated into habitat association classes: FS-
 forest specialists and NFS- non-forest specialists.</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>alpha_hab <span class="ot">&lt;-</span> beetles <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">occurrence=</span> <span class="dv">1</span><span class="sc">*</span>(abundance<span class="sc">&gt;</span><span class="dv">0</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(hab.data,<span class="at">by=</span> <span class="st">&quot;spp&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Landscape,Point, Classification) <span class="sc">%&gt;%</span> </span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">richness=</span><span class="fu">sum</span>(occurrence)) <span class="sc">%&gt;%</span> <span class="co"># dois locais tem riqueza zero 263-13 e 266-28</span></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Landscape, Classification) <span class="sc">%&gt;%</span> <span class="co"># now per landscape n=12</span></span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">alpha_hab =</span> <span class="fu">round</span>(<span class="fu">mean</span>(richness),<span class="dv">2</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">spread</span>(Classification, alpha_hab) <span class="sc">%&gt;%</span></span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">alpha_FS=</span> FS, <span class="at">alpha_NFS=</span> NFS)</span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="do">## gamma richness have to consider spp not to count it twice as it appears more than once per landscape</span></span>
-<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>gamma_hab <span class="ot">&lt;-</span>beetles <span class="sc">%&gt;%</span>  <span class="fu">mutate</span>(<span class="at">occurrence=</span> <span class="dv">1</span><span class="sc">*</span>(abundance<span class="sc">&gt;</span><span class="dv">0</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(hab.data,<span class="at">by=</span> <span class="st">&quot;spp&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Landscape,Classification, spp) <span class="sc">%&gt;%</span> </span>
-<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">tot.occ=</span><span class="fu">sum</span>(occurrence)) <span class="sc">%&gt;%</span></span>
-<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(tot.occ <span class="sc">!=</span><span class="dv">0</span>) <span class="sc">%&gt;%</span> <span class="co"># removing spp that were blank in that landscape</span></span>
-<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Landscape, Classification) <span class="sc">%&gt;%</span></span>
-<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">gamma_hab =</span> <span class="fu">n</span>()) <span class="sc">%&gt;%</span></span>
-<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">spread</span>(Classification, gamma_hab) <span class="sc">%&gt;%</span></span>
-<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">gamma_FS=</span> FS, <span class="at">gamma_NFS=</span> NFS)</span>
-<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>div_hab <span class="ot">&lt;-</span> gamma_hab <span class="sc">%&gt;%</span> <span class="fu">left_join</span>(alpha_hab,<span class="at">by=</span> <span class="st">&#39;Landscape&#39;</span>) <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">beta_FS=</span> <span class="fu">round</span>(gamma_FS<span class="sc">/</span>alpha_FS,<span class="dv">2</span>), <span class="at">beta_NFS=</span> <span class="fu">round</span>(gamma_NFS<span class="sc">/</span>alpha_NFS,<span class="dv">2</span>))</span>
-<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(div_hab, <span class="at">booktabs=</span>T, <span class="at">row.names =</span> F,<span class="at">caption=</span> <span class="st">&quot;Dataset to test alpha, gamma and beta diversity of Forest Specialists (FS) species and Non-Forest Specialist species.&quot;</span>) <span class="sc">%&gt;%</span> <span class="fu">kable_styling</span>(<span class="at">full_width =</span> F)</span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>alpha_hab <span class="ot">&lt;-</span> beetles <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">occurrence=</span> <span class="dv">1</span><span class="sc">*</span>(abundance<span class="sc">&gt;</span><span class="dv">0</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(hab.data,<span class="at">by=</span> <span class="st">&quot;spp&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Landscape,Point, Classification) <span class="sc">%&gt;%</span> </span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">richness=</span><span class="fu">sum</span>(occurrence)) <span class="sc">%&gt;%</span> <span class="co"># dois locais tem riqueza zero 263-13 e 266-28</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Landscape, Classification) <span class="sc">%&gt;%</span> <span class="co"># now per landscape n=12</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">alpha_hab =</span> <span class="fu">round</span>(<span class="fu">mean</span>(richness),<span class="dv">2</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">spread</span>(Classification, alpha_hab) <span class="sc">%&gt;%</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">alpha_FS=</span> FS, <span class="at">alpha_NFS=</span> NFS)</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a><span class="do">## gamma richness have to consider spp not to count it twice as it appears more than once per landscape</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>gamma_hab <span class="ot">&lt;-</span>beetles <span class="sc">%&gt;%</span>  <span class="fu">mutate</span>(<span class="at">occurrence=</span> <span class="dv">1</span><span class="sc">*</span>(abundance<span class="sc">&gt;</span><span class="dv">0</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(hab.data,<span class="at">by=</span> <span class="st">&quot;spp&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Landscape,Classification, spp) <span class="sc">%&gt;%</span> </span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">tot.occ=</span><span class="fu">sum</span>(occurrence)) <span class="sc">%&gt;%</span></span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(tot.occ <span class="sc">!=</span><span class="dv">0</span>) <span class="sc">%&gt;%</span> <span class="co"># removing spp that were blank in that landscape</span></span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Landscape, Classification) <span class="sc">%&gt;%</span></span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">gamma_hab =</span> <span class="fu">n</span>()) <span class="sc">%&gt;%</span></span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">spread</span>(Classification, gamma_hab) <span class="sc">%&gt;%</span></span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">gamma_FS=</span> FS, <span class="at">gamma_NFS=</span> NFS)</span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a>div_hab <span class="ot">&lt;-</span> gamma_hab <span class="sc">%&gt;%</span> <span class="fu">left_join</span>(alpha_hab,<span class="at">by=</span> <span class="st">&#39;Landscape&#39;</span>) <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="at">beta_FS=</span> <span class="fu">round</span>(gamma_FS<span class="sc">/</span>alpha_FS,<span class="dv">2</span>), <span class="at">beta_NFS=</span> <span class="fu">round</span>(gamma_NFS<span class="sc">/</span>alpha_NFS,<span class="dv">2</span>))</span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(div_hab, <span class="at">booktabs=</span>T, <span class="at">row.names =</span> F,<span class="at">caption=</span> <span class="st">&quot;Dataset to test alpha, gamma and beta diversity of Forest Specialists (FS) species and Non-Forest Specialist species.&quot;</span>) <span class="sc">%&gt;%</span> <span class="fu">kable_styling</span>(<span class="at">full_width =</span> F)</span></code></pre></div>
 <table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <caption>
 Dataset to test alpha, gamma and beta diversity of Forest Specialists
@@ -1830,22 +1794,22 @@ beta_NFS
 282
 </td>
 <td style="text-align:right;">
-17
+18
 </td>
 <td style="text-align:right;">
-11
+10
 </td>
 <td style="text-align:right;">
-6.50
+6.62
 </td>
 <td style="text-align:right;">
-4.12
+4.00
 </td>
 <td style="text-align:right;">
-2.62
+2.72
 </td>
 <td style="text-align:right;">
-2.67
+2.50
 </td>
 </tr>
 <tr>
@@ -1902,19 +1866,19 @@ beta_NFS
 21
 </td>
 <td style="text-align:right;">
-14
+13
 </td>
 <td style="text-align:right;">
-8.62
+8.75
 </td>
 <td style="text-align:right;">
-5.75
+5.50
 </td>
 <td style="text-align:right;">
-2.44
+2.40
 </td>
 <td style="text-align:right;">
-2.43
+2.36
 </td>
 </tr>
 <tr>
@@ -1922,22 +1886,22 @@ beta_NFS
 333
 </td>
 <td style="text-align:right;">
-14
-</td>
-<td style="text-align:right;">
 15
 </td>
 <td style="text-align:right;">
-4.50
+14
 </td>
 <td style="text-align:right;">
 4.62
 </td>
 <td style="text-align:right;">
-3.11
+4.50
 </td>
 <td style="text-align:right;">
 3.25
+</td>
+<td style="text-align:right;">
+3.11
 </td>
 </tr>
 <tr>
@@ -1968,22 +1932,22 @@ beta_NFS
 359
 </td>
 <td style="text-align:right;">
-16
-</td>
-<td style="text-align:right;">
 17
 </td>
 <td style="text-align:right;">
-6.00
+16
 </td>
 <td style="text-align:right;">
-5.50
+6.25
 </td>
 <td style="text-align:right;">
-2.67
+5.25
 </td>
 <td style="text-align:right;">
-3.09
+2.72
+</td>
+<td style="text-align:right;">
+3.05
 </td>
 </tr>
 <tr>
@@ -1991,22 +1955,22 @@ beta_NFS
 399
 </td>
 <td style="text-align:right;">
-20
+21
 </td>
 <td style="text-align:right;">
-14
+13
 </td>
 <td style="text-align:right;">
-7.88
+8.00
 </td>
 <td style="text-align:right;">
-5.12
+5.00
 </td>
 <td style="text-align:right;">
-2.54
+2.62
 </td>
 <td style="text-align:right;">
-2.73
+2.60
 </td>
 </tr>
 </tbody>
@@ -2017,20 +1981,20 @@ beta_NFS
 <h1>ABUNDANCES: FS &amp; NFS</h1>
 <p>Get the beetles’ species abundance matrix, calculate abundance at
 site and landscape level:</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>st.hab_ab <span class="ot">&lt;-</span> beetles <span class="sc">%&gt;%</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(hab.data,<span class="at">by=</span> <span class="st">&quot;spp&quot;</span>) <span class="sc">%&gt;%</span></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Classification) <span class="sc">%&gt;%</span></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">ab.tot =</span> <span class="fu">sum</span>(abundance)) <span class="sc">%&gt;%</span></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Landscape, Point, Classification, ab.tot) <span class="sc">%&gt;%</span> </span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">ab.point=</span><span class="fu">sum</span>(abundance)) <span class="sc">%&gt;%</span> </span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Landscape, Classification, ab.tot) <span class="sc">%&gt;%</span> </span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">m.ab =</span> <span class="fu">round</span>(<span class="fu">mean</span>(ab.point),<span class="dv">2</span>)) <span class="sc">%&gt;%</span></span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gather</span>(ab.spread, value, <span class="sc">-</span>(Landscape<span class="sc">:</span>Point<span class="sc">:</span>Classification)) <span class="sc">%&gt;%</span></span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unite</span>(temp, Classification, ab.spread) <span class="sc">%&gt;%</span></span>
-<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">spread</span>(temp, value) <span class="sc">%&gt;%</span></span>
-<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">ab.land_FS=</span> <span class="fu">sum</span>(FS_ab.point), <span class="at">ab.land_NFS=</span> <span class="fu">sum</span>(NFS_ab.point))</span>
-<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(st.hab_ab) <span class="sc">%&gt;%</span> <span class="fu">kable_styling</span>(<span class="at">bootstrap_options =</span> <span class="fu">c</span>(<span class="st">&quot;striped&quot;</span>, <span class="st">&quot;hover&quot;</span>), <span class="at">full_width =</span> F)</span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>st.hab_ab <span class="ot">&lt;-</span> beetles <span class="sc">%&gt;%</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(hab.data,<span class="at">by=</span> <span class="st">&quot;spp&quot;</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Classification) <span class="sc">%&gt;%</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">ab.tot =</span> <span class="fu">sum</span>(abundance)) <span class="sc">%&gt;%</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Landscape, Point, Classification, ab.tot) <span class="sc">%&gt;%</span> </span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">ab.point=</span><span class="fu">sum</span>(abundance)) <span class="sc">%&gt;%</span> </span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Landscape, Classification, ab.tot) <span class="sc">%&gt;%</span> </span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">m.ab =</span> <span class="fu">round</span>(<span class="fu">mean</span>(ab.point),<span class="dv">2</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">gather</span>(ab.spread, value, <span class="sc">-</span>(Landscape<span class="sc">:</span>Point<span class="sc">:</span>Classification)) <span class="sc">%&gt;%</span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">unite</span>(temp, Classification, ab.spread) <span class="sc">%&gt;%</span></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">spread</span>(temp, value) <span class="sc">%&gt;%</span></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">ab.land_FS=</span> <span class="fu">sum</span>(FS_ab.point), <span class="at">ab.land_NFS=</span> <span class="fu">sum</span>(NFS_ab.point))</span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(st.hab_ab) <span class="sc">%&gt;%</span> <span class="fu">kable_styling</span>(<span class="at">bootstrap_options =</span> <span class="fu">c</span>(<span class="st">&quot;striped&quot;</span>, <span class="st">&quot;hover&quot;</span>), <span class="at">full_width =</span> F)</span></code></pre></div>
 <table class="table table-striped table-hover" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <thead>
 <tr>
@@ -2078,7 +2042,7 @@ ab.land_NFS
 3
 </td>
 <td style="text-align:right;">
-2472
+2482
 </td>
 <td style="text-align:right;">
 8.25
@@ -2087,7 +2051,7 @@ ab.land_NFS
 5
 </td>
 <td style="text-align:right;">
-1530
+1520
 </td>
 <td style="text-align:right;">
 5.00
@@ -2110,7 +2074,7 @@ ab.land_NFS
 7
 </td>
 <td style="text-align:right;">
-2472
+2482
 </td>
 <td style="text-align:right;">
 8.25
@@ -2119,7 +2083,7 @@ ab.land_NFS
 0
 </td>
 <td style="text-align:right;">
-1530
+1520
 </td>
 <td style="text-align:right;">
 5.00
@@ -2142,7 +2106,7 @@ ab.land_NFS
 4
 </td>
 <td style="text-align:right;">
-2472
+2482
 </td>
 <td style="text-align:right;">
 8.25
@@ -2151,7 +2115,7 @@ ab.land_NFS
 2
 </td>
 <td style="text-align:right;">
-1530
+1520
 </td>
 <td style="text-align:right;">
 5.00
@@ -2174,7 +2138,7 @@ ab.land_NFS
 11
 </td>
 <td style="text-align:right;">
-2472
+2482
 </td>
 <td style="text-align:right;">
 8.25
@@ -2183,7 +2147,7 @@ ab.land_NFS
 2
 </td>
 <td style="text-align:right;">
-1530
+1520
 </td>
 <td style="text-align:right;">
 5.00
@@ -2206,7 +2170,7 @@ ab.land_NFS
 10
 </td>
 <td style="text-align:right;">
-2472
+2482
 </td>
 <td style="text-align:right;">
 8.25
@@ -2215,7 +2179,7 @@ ab.land_NFS
 3
 </td>
 <td style="text-align:right;">
-1530
+1520
 </td>
 <td style="text-align:right;">
 5.00
@@ -2238,7 +2202,7 @@ ab.land_NFS
 14
 </td>
 <td style="text-align:right;">
-2472
+2482
 </td>
 <td style="text-align:right;">
 8.25
@@ -2247,7 +2211,7 @@ ab.land_NFS
 18
 </td>
 <td style="text-align:right;">
-1530
+1520
 </td>
 <td style="text-align:right;">
 5.00
@@ -2270,7 +2234,7 @@ ab.land_NFS
 10
 </td>
 <td style="text-align:right;">
-2472
+2482
 </td>
 <td style="text-align:right;">
 8.25
@@ -2279,7 +2243,7 @@ ab.land_NFS
 10
 </td>
 <td style="text-align:right;">
-1530
+1520
 </td>
 <td style="text-align:right;">
 5.00
@@ -2302,7 +2266,7 @@ ab.land_NFS
 7
 </td>
 <td style="text-align:right;">
-2472
+2482
 </td>
 <td style="text-align:right;">
 8.25
@@ -2311,7 +2275,7 @@ ab.land_NFS
 0
 </td>
 <td style="text-align:right;">
-1530
+1520
 </td>
 <td style="text-align:right;">
 5.00
@@ -2334,7 +2298,7 @@ ab.land_NFS
 13
 </td>
 <td style="text-align:right;">
-2472
+2482
 </td>
 <td style="text-align:right;">
 21.75
@@ -2343,7 +2307,7 @@ ab.land_NFS
 3
 </td>
 <td style="text-align:right;">
-1530
+1520
 </td>
 <td style="text-align:right;">
 6.38
@@ -2366,7 +2330,7 @@ ab.land_NFS
 90
 </td>
 <td style="text-align:right;">
-2472
+2482
 </td>
 <td style="text-align:right;">
 21.75
@@ -2375,7 +2339,7 @@ ab.land_NFS
 16
 </td>
 <td style="text-align:right;">
-1530
+1520
 </td>
 <td style="text-align:right;">
 6.38
@@ -2398,7 +2362,7 @@ ab.land_NFS
 4
 </td>
 <td style="text-align:right;">
-2472
+2482
 </td>
 <td style="text-align:right;">
 21.75
@@ -2407,7 +2371,7 @@ ab.land_NFS
 4
 </td>
 <td style="text-align:right;">
-1530
+1520
 </td>
 <td style="text-align:right;">
 6.38
@@ -2430,7 +2394,7 @@ ab.land_NFS
 24
 </td>
 <td style="text-align:right;">
-2472
+2482
 </td>
 <td style="text-align:right;">
 21.75
@@ -2439,7 +2403,7 @@ ab.land_NFS
 11
 </td>
 <td style="text-align:right;">
-1530
+1520
 </td>
 <td style="text-align:right;">
 6.38
@@ -2462,7 +2426,7 @@ ab.land_NFS
 1
 </td>
 <td style="text-align:right;">
-2472
+2482
 </td>
 <td style="text-align:right;">
 21.75
@@ -2471,7 +2435,7 @@ ab.land_NFS
 4
 </td>
 <td style="text-align:right;">
-1530
+1520
 </td>
 <td style="text-align:right;">
 6.38
@@ -2494,7 +2458,7 @@ ab.land_NFS
 8
 </td>
 <td style="text-align:right;">
-2472
+2482
 </td>
 <td style="text-align:right;">
 21.75
@@ -2503,7 +2467,7 @@ ab.land_NFS
 4
 </td>
 <td style="text-align:right;">
-1530
+1520
 </td>
 <td style="text-align:right;">
 6.38
@@ -2526,7 +2490,7 @@ ab.land_NFS
 20
 </td>
 <td style="text-align:right;">
-2472
+2482
 </td>
 <td style="text-align:right;">
 21.75
@@ -2535,7 +2499,7 @@ ab.land_NFS
 9
 </td>
 <td style="text-align:right;">
-1530
+1520
 </td>
 <td style="text-align:right;">
 6.38
@@ -2558,7 +2522,7 @@ ab.land_NFS
 14
 </td>
 <td style="text-align:right;">
-2472
+2482
 </td>
 <td style="text-align:right;">
 21.75
@@ -2567,7 +2531,7 @@ ab.land_NFS
 0
 </td>
 <td style="text-align:right;">
-1530
+1520
 </td>
 <td style="text-align:right;">
 6.38
@@ -2590,7 +2554,7 @@ ab.land_NFS
 110
 </td>
 <td style="text-align:right;">
-2472
+2482
 </td>
 <td style="text-align:right;">
 49.12
@@ -2599,7 +2563,7 @@ ab.land_NFS
 31
 </td>
 <td style="text-align:right;">
-1530
+1520
 </td>
 <td style="text-align:right;">
 26.75
@@ -2622,7 +2586,7 @@ ab.land_NFS
 48
 </td>
 <td style="text-align:right;">
-2472
+2482
 </td>
 <td style="text-align:right;">
 49.12
@@ -2631,7 +2595,7 @@ ab.land_NFS
 17
 </td>
 <td style="text-align:right;">
-1530
+1520
 </td>
 <td style="text-align:right;">
 26.75
@@ -2654,7 +2618,7 @@ ab.land_NFS
 23
 </td>
 <td style="text-align:right;">
-2472
+2482
 </td>
 <td style="text-align:right;">
 49.12
@@ -2663,7 +2627,7 @@ ab.land_NFS
 12
 </td>
 <td style="text-align:right;">
-1530
+1520
 </td>
 <td style="text-align:right;">
 26.75
@@ -2686,7 +2650,7 @@ ab.land_NFS
 101
 </td>
 <td style="text-align:right;">
-2472
+2482
 </td>
 <td style="text-align:right;">
 49.12
@@ -2695,7 +2659,7 @@ ab.land_NFS
 114
 </td>
 <td style="text-align:right;">
-1530
+1520
 </td>
 <td style="text-align:right;">
 26.75
@@ -2718,7 +2682,7 @@ ab.land_NFS
 55
 </td>
 <td style="text-align:right;">
-2472
+2482
 </td>
 <td style="text-align:right;">
 49.12
@@ -2727,7 +2691,7 @@ ab.land_NFS
 13
 </td>
 <td style="text-align:right;">
-1530
+1520
 </td>
 <td style="text-align:right;">
 26.75
@@ -2750,7 +2714,7 @@ ab.land_NFS
 41
 </td>
 <td style="text-align:right;">
-2472
+2482
 </td>
 <td style="text-align:right;">
 49.12
@@ -2759,7 +2723,7 @@ ab.land_NFS
 26
 </td>
 <td style="text-align:right;">
-1530
+1520
 </td>
 <td style="text-align:right;">
 26.75
@@ -2782,7 +2746,7 @@ ab.land_NFS
 15
 </td>
 <td style="text-align:right;">
-2472
+2482
 </td>
 <td style="text-align:right;">
 49.12
@@ -2791,7 +2755,7 @@ ab.land_NFS
 1
 </td>
 <td style="text-align:right;">
-1530
+1520
 </td>
 <td style="text-align:right;">
 26.75
@@ -2814,7 +2778,7 @@ ab.land_NFS
 0
 </td>
 <td style="text-align:right;">
-2472
+2482
 </td>
 <td style="text-align:right;">
 49.12
@@ -2823,7 +2787,7 @@ ab.land_NFS
 0
 </td>
 <td style="text-align:right;">
-1530
+1520
 </td>
 <td style="text-align:right;">
 26.75
@@ -2846,7 +2810,7 @@ ab.land_NFS
 6
 </td>
 <td style="text-align:right;">
-2472
+2482
 </td>
 <td style="text-align:right;">
 8.75
@@ -2855,7 +2819,7 @@ ab.land_NFS
 1
 </td>
 <td style="text-align:right;">
-1530
+1520
 </td>
 <td style="text-align:right;">
 1.50
@@ -2878,7 +2842,7 @@ ab.land_NFS
 5
 </td>
 <td style="text-align:right;">
-2472
+2482
 </td>
 <td style="text-align:right;">
 8.75
@@ -2887,7 +2851,7 @@ ab.land_NFS
 3
 </td>
 <td style="text-align:right;">
-1530
+1520
 </td>
 <td style="text-align:right;">
 1.50
@@ -2910,7 +2874,7 @@ ab.land_NFS
 24
 </td>
 <td style="text-align:right;">
-2472
+2482
 </td>
 <td style="text-align:right;">
 8.75
@@ -2919,7 +2883,7 @@ ab.land_NFS
 3
 </td>
 <td style="text-align:right;">
-1530
+1520
 </td>
 <td style="text-align:right;">
 1.50
@@ -2942,7 +2906,7 @@ ab.land_NFS
 9
 </td>
 <td style="text-align:right;">
-2472
+2482
 </td>
 <td style="text-align:right;">
 8.75
@@ -2951,7 +2915,7 @@ ab.land_NFS
 1
 </td>
 <td style="text-align:right;">
-1530
+1520
 </td>
 <td style="text-align:right;">
 1.50
@@ -2974,7 +2938,7 @@ ab.land_NFS
 3
 </td>
 <td style="text-align:right;">
-2472
+2482
 </td>
 <td style="text-align:right;">
 8.75
@@ -2983,7 +2947,7 @@ ab.land_NFS
 2
 </td>
 <td style="text-align:right;">
-1530
+1520
 </td>
 <td style="text-align:right;">
 1.50
@@ -3006,7 +2970,7 @@ ab.land_NFS
 6
 </td>
 <td style="text-align:right;">
-2472
+2482
 </td>
 <td style="text-align:right;">
 8.75
@@ -3015,7 +2979,7 @@ ab.land_NFS
 1
 </td>
 <td style="text-align:right;">
-1530
+1520
 </td>
 <td style="text-align:right;">
 1.50
@@ -3038,7 +3002,7 @@ ab.land_NFS
 0
 </td>
 <td style="text-align:right;">
-2472
+2482
 </td>
 <td style="text-align:right;">
 8.75
@@ -3047,7 +3011,7 @@ ab.land_NFS
 0
 </td>
 <td style="text-align:right;">
-1530
+1520
 </td>
 <td style="text-align:right;">
 1.50
@@ -3070,7 +3034,7 @@ ab.land_NFS
 17
 </td>
 <td style="text-align:right;">
-2472
+2482
 </td>
 <td style="text-align:right;">
 8.75
@@ -3079,7 +3043,7 @@ ab.land_NFS
 1
 </td>
 <td style="text-align:right;">
-1530
+1520
 </td>
 <td style="text-align:right;">
 1.50
@@ -3102,25 +3066,25 @@ ab.land_NFS
 36
 </td>
 <td style="text-align:right;">
-2472
+2482
 </td>
 <td style="text-align:right;">
-27.38
+27.50
 </td>
 <td style="text-align:right;">
 63
 </td>
 <td style="text-align:right;">
-1530
+1520
 </td>
 <td style="text-align:right;">
-26.50
+26.38
 </td>
 <td style="text-align:right;">
-219
+220
 </td>
 <td style="text-align:right;">
-212
+211
 </td>
 </tr>
 <tr>
@@ -3134,25 +3098,25 @@ ab.land_NFS
 6
 </td>
 <td style="text-align:right;">
-2472
+2482
 </td>
 <td style="text-align:right;">
-27.38
+27.50
 </td>
 <td style="text-align:right;">
 4
 </td>
 <td style="text-align:right;">
-1530
+1520
 </td>
 <td style="text-align:right;">
-26.50
+26.38
 </td>
 <td style="text-align:right;">
-219
+220
 </td>
 <td style="text-align:right;">
-212
+211
 </td>
 </tr>
 <tr>
@@ -3166,25 +3130,25 @@ ab.land_NFS
 54
 </td>
 <td style="text-align:right;">
-2472
+2482
 </td>
 <td style="text-align:right;">
-27.38
+27.50
 </td>
 <td style="text-align:right;">
 56
 </td>
 <td style="text-align:right;">
-1530
+1520
 </td>
 <td style="text-align:right;">
-26.50
+26.38
 </td>
 <td style="text-align:right;">
-219
+220
 </td>
 <td style="text-align:right;">
-212
+211
 </td>
 </tr>
 <tr>
@@ -3198,25 +3162,25 @@ ab.land_NFS
 26
 </td>
 <td style="text-align:right;">
-2472
+2482
 </td>
 <td style="text-align:right;">
-27.38
+27.50
 </td>
 <td style="text-align:right;">
 23
 </td>
 <td style="text-align:right;">
-1530
+1520
 </td>
 <td style="text-align:right;">
-26.50
+26.38
 </td>
 <td style="text-align:right;">
-219
+220
 </td>
 <td style="text-align:right;">
-212
+211
 </td>
 </tr>
 <tr>
@@ -3230,25 +3194,25 @@ ab.land_NFS
 42
 </td>
 <td style="text-align:right;">
-2472
+2482
 </td>
 <td style="text-align:right;">
-27.38
+27.50
 </td>
 <td style="text-align:right;">
 19
 </td>
 <td style="text-align:right;">
-1530
+1520
 </td>
 <td style="text-align:right;">
-26.50
+26.38
 </td>
 <td style="text-align:right;">
-219
+220
 </td>
 <td style="text-align:right;">
-212
+211
 </td>
 </tr>
 <tr>
@@ -3262,25 +3226,25 @@ ab.land_NFS
 5
 </td>
 <td style="text-align:right;">
-2472
+2482
 </td>
 <td style="text-align:right;">
-27.38
+27.50
 </td>
 <td style="text-align:right;">
 0
 </td>
 <td style="text-align:right;">
-1530
+1520
 </td>
 <td style="text-align:right;">
-26.50
+26.38
 </td>
 <td style="text-align:right;">
-219
+220
 </td>
 <td style="text-align:right;">
-212
+211
 </td>
 </tr>
 <tr>
@@ -3291,28 +3255,28 @@ ab.land_NFS
 38
 </td>
 <td style="text-align:right;">
-13
+14
 </td>
 <td style="text-align:right;">
-2472
+2482
 </td>
 <td style="text-align:right;">
-27.38
+27.50
 </td>
 <td style="text-align:right;">
-5
+4
 </td>
 <td style="text-align:right;">
-1530
+1520
 </td>
 <td style="text-align:right;">
-26.50
+26.38
 </td>
 <td style="text-align:right;">
-219
+220
 </td>
 <td style="text-align:right;">
-212
+211
 </td>
 </tr>
 <tr>
@@ -3326,25 +3290,25 @@ ab.land_NFS
 37
 </td>
 <td style="text-align:right;">
-2472
+2482
 </td>
 <td style="text-align:right;">
-27.38
+27.50
 </td>
 <td style="text-align:right;">
 42
 </td>
 <td style="text-align:right;">
-1530
+1520
 </td>
 <td style="text-align:right;">
-26.50
+26.38
 </td>
 <td style="text-align:right;">
-219
+220
 </td>
 <td style="text-align:right;">
-212
+211
 </td>
 </tr>
 <tr>
@@ -3358,7 +3322,7 @@ ab.land_NFS
 6
 </td>
 <td style="text-align:right;">
-2472
+2482
 </td>
 <td style="text-align:right;">
 21.43
@@ -3367,7 +3331,7 @@ ab.land_NFS
 3
 </td>
 <td style="text-align:right;">
-1530
+1520
 </td>
 <td style="text-align:right;">
 7.00
@@ -3390,7 +3354,7 @@ ab.land_NFS
 32
 </td>
 <td style="text-align:right;">
-2472
+2482
 </td>
 <td style="text-align:right;">
 21.43
@@ -3399,7 +3363,7 @@ ab.land_NFS
 6
 </td>
 <td style="text-align:right;">
-1530
+1520
 </td>
 <td style="text-align:right;">
 7.00
@@ -3422,7 +3386,7 @@ ab.land_NFS
 89
 </td>
 <td style="text-align:right;">
-2472
+2482
 </td>
 <td style="text-align:right;">
 21.43
@@ -3431,7 +3395,7 @@ ab.land_NFS
 17
 </td>
 <td style="text-align:right;">
-1530
+1520
 </td>
 <td style="text-align:right;">
 7.00
@@ -3454,7 +3418,7 @@ ab.land_NFS
 5
 </td>
 <td style="text-align:right;">
-2472
+2482
 </td>
 <td style="text-align:right;">
 21.43
@@ -3463,7 +3427,7 @@ ab.land_NFS
 6
 </td>
 <td style="text-align:right;">
-1530
+1520
 </td>
 <td style="text-align:right;">
 7.00
@@ -3486,7 +3450,7 @@ ab.land_NFS
 8
 </td>
 <td style="text-align:right;">
-2472
+2482
 </td>
 <td style="text-align:right;">
 21.43
@@ -3495,7 +3459,7 @@ ab.land_NFS
 4
 </td>
 <td style="text-align:right;">
-1530
+1520
 </td>
 <td style="text-align:right;">
 7.00
@@ -3518,7 +3482,7 @@ ab.land_NFS
 2
 </td>
 <td style="text-align:right;">
-2472
+2482
 </td>
 <td style="text-align:right;">
 21.43
@@ -3527,7 +3491,7 @@ ab.land_NFS
 1
 </td>
 <td style="text-align:right;">
-1530
+1520
 </td>
 <td style="text-align:right;">
 7.00
@@ -3550,7 +3514,7 @@ ab.land_NFS
 8
 </td>
 <td style="text-align:right;">
-2472
+2482
 </td>
 <td style="text-align:right;">
 21.43
@@ -3559,7 +3523,7 @@ ab.land_NFS
 12
 </td>
 <td style="text-align:right;">
-1530
+1520
 </td>
 <td style="text-align:right;">
 7.00
@@ -3582,7 +3546,7 @@ ab.land_NFS
 30
 </td>
 <td style="text-align:right;">
-2472
+2482
 </td>
 <td style="text-align:right;">
 19.00
@@ -3591,7 +3555,7 @@ ab.land_NFS
 4
 </td>
 <td style="text-align:right;">
-1530
+1520
 </td>
 <td style="text-align:right;">
 7.00
@@ -3614,7 +3578,7 @@ ab.land_NFS
 10
 </td>
 <td style="text-align:right;">
-2472
+2482
 </td>
 <td style="text-align:right;">
 19.00
@@ -3623,7 +3587,7 @@ ab.land_NFS
 1
 </td>
 <td style="text-align:right;">
-1530
+1520
 </td>
 <td style="text-align:right;">
 7.00
@@ -3646,7 +3610,7 @@ ab.land_NFS
 11
 </td>
 <td style="text-align:right;">
-2472
+2482
 </td>
 <td style="text-align:right;">
 19.00
@@ -3655,7 +3619,7 @@ ab.land_NFS
 3
 </td>
 <td style="text-align:right;">
-1530
+1520
 </td>
 <td style="text-align:right;">
 7.00
@@ -3678,7 +3642,7 @@ ab.land_NFS
 10
 </td>
 <td style="text-align:right;">
-2472
+2482
 </td>
 <td style="text-align:right;">
 19.00
@@ -3687,7 +3651,7 @@ ab.land_NFS
 16
 </td>
 <td style="text-align:right;">
-1530
+1520
 </td>
 <td style="text-align:right;">
 7.00
@@ -3710,7 +3674,7 @@ ab.land_NFS
 44
 </td>
 <td style="text-align:right;">
-2472
+2482
 </td>
 <td style="text-align:right;">
 19.00
@@ -3719,7 +3683,7 @@ ab.land_NFS
 16
 </td>
 <td style="text-align:right;">
-1530
+1520
 </td>
 <td style="text-align:right;">
 7.00
@@ -3742,7 +3706,7 @@ ab.land_NFS
 37
 </td>
 <td style="text-align:right;">
-2472
+2482
 </td>
 <td style="text-align:right;">
 19.00
@@ -3751,7 +3715,7 @@ ab.land_NFS
 12
 </td>
 <td style="text-align:right;">
-1530
+1520
 </td>
 <td style="text-align:right;">
 7.00
@@ -3774,7 +3738,7 @@ ab.land_NFS
 4
 </td>
 <td style="text-align:right;">
-2472
+2482
 </td>
 <td style="text-align:right;">
 19.00
@@ -3783,7 +3747,7 @@ ab.land_NFS
 1
 </td>
 <td style="text-align:right;">
-1530
+1520
 </td>
 <td style="text-align:right;">
 7.00
@@ -3806,7 +3770,7 @@ ab.land_NFS
 6
 </td>
 <td style="text-align:right;">
-2472
+2482
 </td>
 <td style="text-align:right;">
 19.00
@@ -3815,7 +3779,7 @@ ab.land_NFS
 3
 </td>
 <td style="text-align:right;">
-1530
+1520
 </td>
 <td style="text-align:right;">
 7.00
@@ -3835,28 +3799,28 @@ ab.land_NFS
 0
 </td>
 <td style="text-align:right;">
-29
+31
 </td>
 <td style="text-align:right;">
-2472
+2482
 </td>
 <td style="text-align:right;">
-46.12
+46.62
 </td>
 <td style="text-align:right;">
-6
+4
 </td>
 <td style="text-align:right;">
-1530
+1520
 </td>
 <td style="text-align:right;">
-32.75
+32.25
 </td>
 <td style="text-align:right;">
-369
+373
 </td>
 <td style="text-align:right;">
-262
+258
 </td>
 </tr>
 <tr>
@@ -3870,25 +3834,25 @@ ab.land_NFS
 28
 </td>
 <td style="text-align:right;">
-2472
+2482
 </td>
 <td style="text-align:right;">
-46.12
+46.62
 </td>
 <td style="text-align:right;">
 7
 </td>
 <td style="text-align:right;">
-1530
+1520
 </td>
 <td style="text-align:right;">
-32.75
+32.25
 </td>
 <td style="text-align:right;">
-369
+373
 </td>
 <td style="text-align:right;">
-262
+258
 </td>
 </tr>
 <tr>
@@ -3902,25 +3866,25 @@ ab.land_NFS
 47
 </td>
 <td style="text-align:right;">
-2472
+2482
 </td>
 <td style="text-align:right;">
-46.12
+46.62
 </td>
 <td style="text-align:right;">
 82
 </td>
 <td style="text-align:right;">
-1530
+1520
 </td>
 <td style="text-align:right;">
-32.75
+32.25
 </td>
 <td style="text-align:right;">
-369
+373
 </td>
 <td style="text-align:right;">
-262
+258
 </td>
 </tr>
 <tr>
@@ -3934,25 +3898,25 @@ ab.land_NFS
 79
 </td>
 <td style="text-align:right;">
-2472
+2482
 </td>
 <td style="text-align:right;">
-46.12
+46.62
 </td>
 <td style="text-align:right;">
 22
 </td>
 <td style="text-align:right;">
-1530
+1520
 </td>
 <td style="text-align:right;">
-32.75
+32.25
 </td>
 <td style="text-align:right;">
-369
+373
 </td>
 <td style="text-align:right;">
-262
+258
 </td>
 </tr>
 <tr>
@@ -3966,25 +3930,25 @@ ab.land_NFS
 72
 </td>
 <td style="text-align:right;">
-2472
+2482
 </td>
 <td style="text-align:right;">
-46.12
+46.62
 </td>
 <td style="text-align:right;">
 55
 </td>
 <td style="text-align:right;">
-1530
+1520
 </td>
 <td style="text-align:right;">
-32.75
+32.25
 </td>
 <td style="text-align:right;">
-369
+373
 </td>
 <td style="text-align:right;">
-262
+258
 </td>
 </tr>
 <tr>
@@ -3998,25 +3962,25 @@ ab.land_NFS
 45
 </td>
 <td style="text-align:right;">
-2472
+2482
 </td>
 <td style="text-align:right;">
-46.12
+46.62
 </td>
 <td style="text-align:right;">
 16
 </td>
 <td style="text-align:right;">
-1530
+1520
 </td>
 <td style="text-align:right;">
-32.75
+32.25
 </td>
 <td style="text-align:right;">
-369
+373
 </td>
 <td style="text-align:right;">
-262
+258
 </td>
 </tr>
 <tr>
@@ -4030,25 +3994,25 @@ ab.land_NFS
 17
 </td>
 <td style="text-align:right;">
-2472
+2482
 </td>
 <td style="text-align:right;">
-46.12
+46.62
 </td>
 <td style="text-align:right;">
 28
 </td>
 <td style="text-align:right;">
-1530
+1520
 </td>
 <td style="text-align:right;">
-32.75
+32.25
 </td>
 <td style="text-align:right;">
-369
+373
 </td>
 <td style="text-align:right;">
-262
+258
 </td>
 </tr>
 <tr>
@@ -4059,28 +4023,28 @@ ab.land_NFS
 14
 </td>
 <td style="text-align:right;">
-52
+54
 </td>
 <td style="text-align:right;">
-2472
+2482
 </td>
 <td style="text-align:right;">
-46.12
+46.62
 </td>
 <td style="text-align:right;">
-46
+44
 </td>
 <td style="text-align:right;">
-1530
+1520
 </td>
 <td style="text-align:right;">
-32.75
+32.25
 </td>
 <td style="text-align:right;">
-369
+373
 </td>
 <td style="text-align:right;">
-262
+258
 </td>
 </tr>
 <tr>
@@ -4094,25 +4058,25 @@ ab.land_NFS
 18
 </td>
 <td style="text-align:right;">
-2472
+2482
 </td>
 <td style="text-align:right;">
-19.75
+19.88
 </td>
 <td style="text-align:right;">
 39
 </td>
 <td style="text-align:right;">
-1530
+1520
 </td>
 <td style="text-align:right;">
-27.38
+27.25
 </td>
 <td style="text-align:right;">
-158
+159
 </td>
 <td style="text-align:right;">
-219
+218
 </td>
 </tr>
 <tr>
@@ -4126,25 +4090,25 @@ ab.land_NFS
 6
 </td>
 <td style="text-align:right;">
-2472
+2482
 </td>
 <td style="text-align:right;">
-19.75
+19.88
 </td>
 <td style="text-align:right;">
 18
 </td>
 <td style="text-align:right;">
-1530
+1520
 </td>
 <td style="text-align:right;">
-27.38
+27.25
 </td>
 <td style="text-align:right;">
-158
+159
 </td>
 <td style="text-align:right;">
-219
+218
 </td>
 </tr>
 <tr>
@@ -4158,25 +4122,25 @@ ab.land_NFS
 29
 </td>
 <td style="text-align:right;">
-2472
+2482
 </td>
 <td style="text-align:right;">
-19.75
+19.88
 </td>
 <td style="text-align:right;">
 36
 </td>
 <td style="text-align:right;">
-1530
+1520
 </td>
 <td style="text-align:right;">
-27.38
+27.25
 </td>
 <td style="text-align:right;">
-158
+159
 </td>
 <td style="text-align:right;">
-219
+218
 </td>
 </tr>
 <tr>
@@ -4190,25 +4154,25 @@ ab.land_NFS
 29
 </td>
 <td style="text-align:right;">
-2472
+2482
 </td>
 <td style="text-align:right;">
-19.75
+19.88
 </td>
 <td style="text-align:right;">
 1
 </td>
 <td style="text-align:right;">
-1530
+1520
 </td>
 <td style="text-align:right;">
-27.38
+27.25
 </td>
 <td style="text-align:right;">
-158
+159
 </td>
 <td style="text-align:right;">
-219
+218
 </td>
 </tr>
 <tr>
@@ -4222,25 +4186,25 @@ ab.land_NFS
 10
 </td>
 <td style="text-align:right;">
-2472
+2482
 </td>
 <td style="text-align:right;">
-19.75
+19.88
 </td>
 <td style="text-align:right;">
 8
 </td>
 <td style="text-align:right;">
-1530
+1520
 </td>
 <td style="text-align:right;">
-27.38
+27.25
 </td>
 <td style="text-align:right;">
-158
+159
 </td>
 <td style="text-align:right;">
-219
+218
 </td>
 </tr>
 <tr>
@@ -4254,25 +4218,25 @@ ab.land_NFS
 27
 </td>
 <td style="text-align:right;">
-2472
+2482
 </td>
 <td style="text-align:right;">
-19.75
+19.88
 </td>
 <td style="text-align:right;">
 44
 </td>
 <td style="text-align:right;">
-1530
+1520
 </td>
 <td style="text-align:right;">
-27.38
+27.25
 </td>
 <td style="text-align:right;">
-158
+159
 </td>
 <td style="text-align:right;">
-219
+218
 </td>
 </tr>
 <tr>
@@ -4286,25 +4250,25 @@ ab.land_NFS
 13
 </td>
 <td style="text-align:right;">
-2472
+2482
 </td>
 <td style="text-align:right;">
-19.75
+19.88
 </td>
 <td style="text-align:right;">
 30
 </td>
 <td style="text-align:right;">
-1530
+1520
 </td>
 <td style="text-align:right;">
-27.38
+27.25
 </td>
 <td style="text-align:right;">
-158
+159
 </td>
 <td style="text-align:right;">
-219
+218
 </td>
 </tr>
 <tr>
@@ -4315,28 +4279,28 @@ ab.land_NFS
 8
 </td>
 <td style="text-align:right;">
-26
+27
 </td>
 <td style="text-align:right;">
-2472
+2482
 </td>
 <td style="text-align:right;">
-19.75
+19.88
 </td>
 <td style="text-align:right;">
-43
+42
 </td>
 <td style="text-align:right;">
-1530
+1520
 </td>
 <td style="text-align:right;">
-27.38
+27.25
 </td>
 <td style="text-align:right;">
-158
+159
 </td>
 <td style="text-align:right;">
-219
+218
 </td>
 </tr>
 <tr>
@@ -4350,7 +4314,7 @@ ab.land_NFS
 18
 </td>
 <td style="text-align:right;">
-2472
+2482
 </td>
 <td style="text-align:right;">
 17.50
@@ -4359,7 +4323,7 @@ ab.land_NFS
 6
 </td>
 <td style="text-align:right;">
-1530
+1520
 </td>
 <td style="text-align:right;">
 14.12
@@ -4382,7 +4346,7 @@ ab.land_NFS
 4
 </td>
 <td style="text-align:right;">
-2472
+2482
 </td>
 <td style="text-align:right;">
 17.50
@@ -4391,7 +4355,7 @@ ab.land_NFS
 0
 </td>
 <td style="text-align:right;">
-1530
+1520
 </td>
 <td style="text-align:right;">
 14.12
@@ -4414,7 +4378,7 @@ ab.land_NFS
 23
 </td>
 <td style="text-align:right;">
-2472
+2482
 </td>
 <td style="text-align:right;">
 17.50
@@ -4423,7 +4387,7 @@ ab.land_NFS
 20
 </td>
 <td style="text-align:right;">
-1530
+1520
 </td>
 <td style="text-align:right;">
 14.12
@@ -4446,7 +4410,7 @@ ab.land_NFS
 4
 </td>
 <td style="text-align:right;">
-2472
+2482
 </td>
 <td style="text-align:right;">
 17.50
@@ -4455,7 +4419,7 @@ ab.land_NFS
 8
 </td>
 <td style="text-align:right;">
-1530
+1520
 </td>
 <td style="text-align:right;">
 14.12
@@ -4478,7 +4442,7 @@ ab.land_NFS
 32
 </td>
 <td style="text-align:right;">
-2472
+2482
 </td>
 <td style="text-align:right;">
 17.50
@@ -4487,7 +4451,7 @@ ab.land_NFS
 25
 </td>
 <td style="text-align:right;">
-1530
+1520
 </td>
 <td style="text-align:right;">
 14.12
@@ -4510,7 +4474,7 @@ ab.land_NFS
 23
 </td>
 <td style="text-align:right;">
-2472
+2482
 </td>
 <td style="text-align:right;">
 17.50
@@ -4519,7 +4483,7 @@ ab.land_NFS
 13
 </td>
 <td style="text-align:right;">
-1530
+1520
 </td>
 <td style="text-align:right;">
 14.12
@@ -4542,7 +4506,7 @@ ab.land_NFS
 11
 </td>
 <td style="text-align:right;">
-2472
+2482
 </td>
 <td style="text-align:right;">
 17.50
@@ -4551,7 +4515,7 @@ ab.land_NFS
 7
 </td>
 <td style="text-align:right;">
-1530
+1520
 </td>
 <td style="text-align:right;">
 14.12
@@ -4574,7 +4538,7 @@ ab.land_NFS
 25
 </td>
 <td style="text-align:right;">
-2472
+2482
 </td>
 <td style="text-align:right;">
 17.50
@@ -4583,7 +4547,7 @@ ab.land_NFS
 34
 </td>
 <td style="text-align:right;">
-1530
+1520
 </td>
 <td style="text-align:right;">
 14.12
@@ -4606,25 +4570,25 @@ ab.land_NFS
 23
 </td>
 <td style="text-align:right;">
-2472
+2482
 </td>
 <td style="text-align:right;">
-18.62
+19.00
 </td>
 <td style="text-align:right;">
 9
 </td>
 <td style="text-align:right;">
-1530
+1520
 </td>
 <td style="text-align:right;">
-16.62
+16.25
 </td>
 <td style="text-align:right;">
-149
+152
 </td>
 <td style="text-align:right;">
-133
+130
 </td>
 </tr>
 <tr>
@@ -4638,25 +4602,25 @@ ab.land_NFS
 4
 </td>
 <td style="text-align:right;">
-2472
+2482
 </td>
 <td style="text-align:right;">
-18.62
+19.00
 </td>
 <td style="text-align:right;">
 13
 </td>
 <td style="text-align:right;">
-1530
+1520
 </td>
 <td style="text-align:right;">
-16.62
+16.25
 </td>
 <td style="text-align:right;">
-149
+152
 </td>
 <td style="text-align:right;">
-133
+130
 </td>
 </tr>
 <tr>
@@ -4670,25 +4634,25 @@ ab.land_NFS
 11
 </td>
 <td style="text-align:right;">
-2472
+2482
 </td>
 <td style="text-align:right;">
-18.62
+19.00
 </td>
 <td style="text-align:right;">
 8
 </td>
 <td style="text-align:right;">
-1530
+1520
 </td>
 <td style="text-align:right;">
-16.62
+16.25
 </td>
 <td style="text-align:right;">
-149
+152
 </td>
 <td style="text-align:right;">
-133
+130
 </td>
 </tr>
 <tr>
@@ -4699,28 +4663,28 @@ ab.land_NFS
 4
 </td>
 <td style="text-align:right;">
-19
+20
 </td>
 <td style="text-align:right;">
-2472
+2482
 </td>
 <td style="text-align:right;">
-18.62
+19.00
 </td>
 <td style="text-align:right;">
-23
+22
 </td>
 <td style="text-align:right;">
-1530
+1520
 </td>
 <td style="text-align:right;">
-16.62
+16.25
 </td>
 <td style="text-align:right;">
-149
+152
 </td>
 <td style="text-align:right;">
-133
+130
 </td>
 </tr>
 <tr>
@@ -4734,25 +4698,25 @@ ab.land_NFS
 20
 </td>
 <td style="text-align:right;">
-2472
+2482
 </td>
 <td style="text-align:right;">
-18.62
+19.00
 </td>
 <td style="text-align:right;">
 10
 </td>
 <td style="text-align:right;">
-1530
+1520
 </td>
 <td style="text-align:right;">
-16.62
+16.25
 </td>
 <td style="text-align:right;">
-149
+152
 </td>
 <td style="text-align:right;">
-133
+130
 </td>
 </tr>
 <tr>
@@ -4763,28 +4727,28 @@ ab.land_NFS
 19
 </td>
 <td style="text-align:right;">
-26
+28
 </td>
 <td style="text-align:right;">
-2472
+2482
 </td>
 <td style="text-align:right;">
-18.62
+19.00
 </td>
 <td style="text-align:right;">
-38
+36
 </td>
 <td style="text-align:right;">
-1530
+1520
 </td>
 <td style="text-align:right;">
-16.62
+16.25
 </td>
 <td style="text-align:right;">
-149
+152
 </td>
 <td style="text-align:right;">
-133
+130
 </td>
 </tr>
 <tr>
@@ -4798,25 +4762,25 @@ ab.land_NFS
 28
 </td>
 <td style="text-align:right;">
-2472
+2482
 </td>
 <td style="text-align:right;">
-18.62
+19.00
 </td>
 <td style="text-align:right;">
 9
 </td>
 <td style="text-align:right;">
-1530
+1520
 </td>
 <td style="text-align:right;">
-16.62
+16.25
 </td>
 <td style="text-align:right;">
-149
+152
 </td>
 <td style="text-align:right;">
-133
+130
 </td>
 </tr>
 <tr>
@@ -4830,25 +4794,25 @@ ab.land_NFS
 18
 </td>
 <td style="text-align:right;">
-2472
+2482
 </td>
 <td style="text-align:right;">
-18.62
+19.00
 </td>
 <td style="text-align:right;">
 23
 </td>
 <td style="text-align:right;">
-1530
+1520
 </td>
 <td style="text-align:right;">
-16.62
+16.25
 </td>
 <td style="text-align:right;">
-149
+152
 </td>
 <td style="text-align:right;">
-133
+130
 </td>
 </tr>
 <tr>
@@ -4862,25 +4826,25 @@ ab.land_NFS
 73
 </td>
 <td style="text-align:right;">
-2472
+2482
 </td>
 <td style="text-align:right;">
-54.00
+54.12
 </td>
 <td style="text-align:right;">
 20
 </td>
 <td style="text-align:right;">
-1530
+1520
 </td>
 <td style="text-align:right;">
-21.12
+21.00
 </td>
 <td style="text-align:right;">
-432
+433
 </td>
 <td style="text-align:right;">
-169
+168
 </td>
 </tr>
 <tr>
@@ -4894,25 +4858,25 @@ ab.land_NFS
 12
 </td>
 <td style="text-align:right;">
-2472
+2482
 </td>
 <td style="text-align:right;">
-54.00
+54.12
 </td>
 <td style="text-align:right;">
 20
 </td>
 <td style="text-align:right;">
-1530
+1520
 </td>
 <td style="text-align:right;">
-21.12
+21.00
 </td>
 <td style="text-align:right;">
-432
+433
 </td>
 <td style="text-align:right;">
-169
+168
 </td>
 </tr>
 <tr>
@@ -4926,25 +4890,25 @@ ab.land_NFS
 39
 </td>
 <td style="text-align:right;">
-2472
+2482
 </td>
 <td style="text-align:right;">
-54.00
+54.12
 </td>
 <td style="text-align:right;">
 21
 </td>
 <td style="text-align:right;">
-1530
+1520
 </td>
 <td style="text-align:right;">
-21.12
+21.00
 </td>
 <td style="text-align:right;">
-432
+433
 </td>
 <td style="text-align:right;">
-169
+168
 </td>
 </tr>
 <tr>
@@ -4958,25 +4922,25 @@ ab.land_NFS
 188
 </td>
 <td style="text-align:right;">
-2472
+2482
 </td>
 <td style="text-align:right;">
-54.00
+54.12
 </td>
 <td style="text-align:right;">
 23
 </td>
 <td style="text-align:right;">
-1530
+1520
 </td>
 <td style="text-align:right;">
-21.12
+21.00
 </td>
 <td style="text-align:right;">
-432
+433
 </td>
 <td style="text-align:right;">
-169
+168
 </td>
 </tr>
 <tr>
@@ -4990,25 +4954,25 @@ ab.land_NFS
 44
 </td>
 <td style="text-align:right;">
-2472
+2482
 </td>
 <td style="text-align:right;">
-54.00
+54.12
 </td>
 <td style="text-align:right;">
 12
 </td>
 <td style="text-align:right;">
-1530
+1520
 </td>
 <td style="text-align:right;">
-21.12
+21.00
 </td>
 <td style="text-align:right;">
-432
+433
 </td>
 <td style="text-align:right;">
-169
+168
 </td>
 </tr>
 <tr>
@@ -5022,25 +4986,25 @@ ab.land_NFS
 0
 </td>
 <td style="text-align:right;">
-2472
+2482
 </td>
 <td style="text-align:right;">
-54.00
+54.12
 </td>
 <td style="text-align:right;">
 5
 </td>
 <td style="text-align:right;">
-1530
+1520
 </td>
 <td style="text-align:right;">
-21.12
+21.00
 </td>
 <td style="text-align:right;">
-432
+433
 </td>
 <td style="text-align:right;">
-169
+168
 </td>
 </tr>
 <tr>
@@ -5054,25 +5018,25 @@ ab.land_NFS
 12
 </td>
 <td style="text-align:right;">
-2472
+2482
 </td>
 <td style="text-align:right;">
-54.00
+54.12
 </td>
 <td style="text-align:right;">
 8
 </td>
 <td style="text-align:right;">
-1530
+1520
 </td>
 <td style="text-align:right;">
-21.12
+21.00
 </td>
 <td style="text-align:right;">
-432
+433
 </td>
 <td style="text-align:right;">
-169
+168
 </td>
 </tr>
 <tr>
@@ -5083,40 +5047,40 @@ ab.land_NFS
 18
 </td>
 <td style="text-align:right;">
-64
+65
 </td>
 <td style="text-align:right;">
-2472
+2482
 </td>
 <td style="text-align:right;">
-54.00
+54.12
 </td>
 <td style="text-align:right;">
-60
+59
 </td>
 <td style="text-align:right;">
-1530
+1520
 </td>
 <td style="text-align:right;">
-21.12
+21.00
 </td>
 <td style="text-align:right;">
-432
+433
 </td>
 <td style="text-align:right;">
-169
+168
 </td>
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>ab_hab <span class="ot">&lt;-</span> st.hab_ab <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(Landscape, ab.land_FS, ab.land_NFS) <span class="sc">%&gt;%</span> </span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">mean.ab_FS=</span> <span class="fu">round</span>(<span class="fu">mean</span>(FS_ab.point), <span class="dv">2</span>), </span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">mean.ab_NFS=</span> <span class="fu">round</span>(<span class="fu">mean</span>(NFS_ab.point), <span class="dv">2</span>), </span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">med.ab_FS=</span> <span class="fu">median</span>(FS_ab.point), <span class="at">med.ab_NFS=</span> <span class="fu">median</span>(NFS_ab.point), </span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>            <span class="at">cv.ab_FS=</span> <span class="fu">round</span>(<span class="fu">sd</span>(FS_ab.point)<span class="sc">/</span><span class="fu">mean</span>(FS_ab.point), <span class="dv">2</span>), </span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>            <span class="at">cv.ab_NFS=</span> <span class="fu">round</span>(<span class="fu">sd</span>(NFS_ab.point)<span class="sc">/</span><span class="fu">mean</span>(NFS_ab.point), <span class="dv">2</span>))</span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(ab_hab) <span class="sc">%&gt;%</span> <span class="fu">kable_styling</span>(<span class="at">bootstrap_options =</span> <span class="fu">c</span>(<span class="st">&quot;striped&quot;</span>, <span class="st">&quot;hover&quot;</span>), <span class="at">full_width =</span> F)</span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>ab_hab <span class="ot">&lt;-</span> st.hab_ab <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(Landscape, ab.land_FS, ab.land_NFS) <span class="sc">%&gt;%</span> </span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">mean.ab_FS=</span> <span class="fu">round</span>(<span class="fu">mean</span>(FS_ab.point), <span class="dv">2</span>), </span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>            <span class="at">mean.ab_NFS=</span> <span class="fu">round</span>(<span class="fu">mean</span>(NFS_ab.point), <span class="dv">2</span>), </span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>            <span class="at">med.ab_FS=</span> <span class="fu">median</span>(FS_ab.point), <span class="at">med.ab_NFS=</span> <span class="fu">median</span>(NFS_ab.point), </span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>            <span class="at">cv.ab_FS=</span> <span class="fu">round</span>(<span class="fu">sd</span>(FS_ab.point)<span class="sc">/</span><span class="fu">mean</span>(FS_ab.point), <span class="dv">2</span>), </span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>            <span class="at">cv.ab_NFS=</span> <span class="fu">round</span>(<span class="fu">sd</span>(NFS_ab.point)<span class="sc">/</span><span class="fu">mean</span>(NFS_ab.point), <span class="dv">2</span>))</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="fu">kable</span>(ab_hab) <span class="sc">%&gt;%</span> <span class="fu">kable_styling</span>(<span class="at">bootstrap_options =</span> <span class="fu">c</span>(<span class="st">&quot;striped&quot;</span>, <span class="st">&quot;hover&quot;</span>), <span class="at">full_width =</span> F)</span></code></pre></div>
 <table class="table table-striped table-hover" style="width: auto !important; margin-left: auto; margin-right: auto;">
 <thead>
 <tr>
@@ -5271,16 +5235,16 @@ cv.ab_NFS
 282
 </td>
 <td style="text-align:right;">
-219
+220
 </td>
 <td style="text-align:right;">
-212
+211
 </td>
 <td style="text-align:right;">
-27.38
+27.50
 </td>
 <td style="text-align:right;">
-26.50
+26.38
 </td>
 <td style="text-align:right;">
 31.0
@@ -5289,10 +5253,10 @@ cv.ab_NFS
 21.0
 </td>
 <td style="text-align:right;">
-0.66
+0.65
 </td>
 <td style="text-align:right;">
-0.92
+0.93
 </td>
 </tr>
 <tr>
@@ -5358,16 +5322,16 @@ cv.ab_NFS
 329
 </td>
 <td style="text-align:right;">
-369
+373
 </td>
 <td style="text-align:right;">
-262
+258
 </td>
 <td style="text-align:right;">
-46.12
+46.62
 </td>
 <td style="text-align:right;">
-32.75
+32.25
 </td>
 <td style="text-align:right;">
 46.0
@@ -5376,10 +5340,10 @@ cv.ab_NFS
 25.0
 </td>
 <td style="text-align:right;">
-0.47
+0.46
 </td>
 <td style="text-align:right;">
-0.81
+0.82
 </td>
 </tr>
 <tr>
@@ -5387,19 +5351,19 @@ cv.ab_NFS
 333
 </td>
 <td style="text-align:right;">
-158
+159
 </td>
 <td style="text-align:right;">
-219
+218
 </td>
 <td style="text-align:right;">
-19.75
+19.88
 </td>
 <td style="text-align:right;">
-27.38
+27.25
 </td>
 <td style="text-align:right;">
-22.0
+22.5
 </td>
 <td style="text-align:right;">
 33.0
@@ -5445,28 +5409,28 @@ cv.ab_NFS
 359
 </td>
 <td style="text-align:right;">
-149
+152
 </td>
 <td style="text-align:right;">
-133
+130
 </td>
 <td style="text-align:right;">
-18.62
+19.00
 </td>
 <td style="text-align:right;">
-16.62
+16.25
 </td>
 <td style="text-align:right;">
-19.5
+20.0
 </td>
 <td style="text-align:right;">
 11.5
 </td>
 <td style="text-align:right;">
-0.42
+0.43
 </td>
 <td style="text-align:right;">
-0.64
+0.61
 </td>
 </tr>
 <tr>
@@ -5474,16 +5438,16 @@ cv.ab_NFS
 399
 </td>
 <td style="text-align:right;">
-432
+433
 </td>
 <td style="text-align:right;">
-169
+168
 </td>
 <td style="text-align:right;">
-54.00
+54.12
 </td>
 <td style="text-align:right;">
-21.12
+21.00
 </td>
 <td style="text-align:right;">
 41.5
@@ -5495,7 +5459,7 @@ cv.ab_NFS
 1.11
 </td>
 <td style="text-align:right;">
-0.81
+0.80
 </td>
 </tr>
 </tbody>
@@ -5504,201 +5468,215 @@ cv.ab_NFS
 <div id="beta-raup-crick-fs-nfs" class="section level1">
 <h1>BETA Raup-Crick: FS &amp; NFS</h1>
 <p>Load functions:</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load beta RC presence-absence function:</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="fu">here</span>(<span class="st">&quot;scripts&quot;</span>, <span class="st">&quot;raup_crick_modif.R&quot;</span>))</span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="co"># load beta RC abundance-based function:</span></span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="co"># função rc_qrand modificado de Puttker et al. 2014</span></span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="fu">here</span>(<span class="st">&quot;scripts&quot;</span>, <span class="st">&quot;rc_qrand_modif.R&quot;</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Load beta RC presence-absence function:</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="fu">here</span>(<span class="st">&quot;scripts&quot;</span>, <span class="st">&quot;raup_crick_modif.R&quot;</span>))</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="co"># load beta RC abundance-based function:</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="co"># função rc_qrand modificado de Puttker et al. 2014</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="fu">here</span>(<span class="st">&quot;scripts&quot;</span>, <span class="st">&quot;rc_qrand_modif.R&quot;</span>))</span></code></pre></div>
 <p>Start from community matrix (spp x site) and subset it for each
 group, as we treat it separately:</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="do">## community data (sppXsite matrix) - entry for beta RC calculations</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>b.com <span class="ot">&lt;-</span> data2 <span class="sc">%&gt;%</span> </span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="sc">-</span>Trap_num,<span class="sc">-</span>Year,<span class="sc">-</span>Month,<span class="sc">-</span>Day,<span class="sc">-</span>Muncipality,<span class="sc">-</span>Lat,<span class="sc">-</span>Long,<span class="sc">-</span>Alt) <span class="sc">%&gt;%</span></span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Landscape,Point) <span class="sc">%&gt;%</span> <span class="fu">summarise_all</span>(sum)</span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="do">## vector for each set of species</span></span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>fs.spp <span class="ot">&lt;-</span> hab.data <span class="sc">%&gt;%</span> <span class="fu">filter</span>(Classification<span class="sc">==</span><span class="st">&quot;FS&quot;</span>) <span class="sc">%&gt;%</span> <span class="fu">pull</span>(spp)</span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>nfs.spp <span class="ot">&lt;-</span>  hab.data <span class="sc">%&gt;%</span> <span class="fu">filter</span>(Classification<span class="sc">==</span><span class="st">&quot;NFS&quot;</span>) <span class="sc">%&gt;%</span> <span class="fu">pull</span>(spp)</span>
-<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a><span class="co"># sitXsp datasets for each</span></span>
-<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>b.com.fs <span class="ot">&lt;-</span> b.com <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">select</span>(Landscape, Point, <span class="fu">all_of</span>(fs.spp))</span>
-<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>b.com.nfs <span class="ot">&lt;-</span> b.com <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">select</span>(Landscape, Point, <span class="fu">all_of</span>(nfs.spp))</span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="do">## community data (sppXsite matrix) - entry for beta RC calculations</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>b.com <span class="ot">&lt;-</span> data2 <span class="sc">%&gt;%</span> </span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="sc">-</span>Trap_num,<span class="sc">-</span>Year,<span class="sc">-</span>Month,<span class="sc">-</span>Day,<span class="sc">-</span>Muncipality,<span class="sc">-</span>Lat,<span class="sc">-</span>Long,<span class="sc">-</span>Alt) <span class="sc">%&gt;%</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Landscape,Point) <span class="sc">%&gt;%</span> <span class="fu">summarise_all</span>(sum)</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="do">## vector for each set of species</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>fs.spp <span class="ot">&lt;-</span> hab.data <span class="sc">%&gt;%</span> <span class="fu">filter</span>(Classification<span class="sc">==</span><span class="st">&quot;FS&quot;</span>) <span class="sc">%&gt;%</span> <span class="fu">pull</span>(spp)</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>nfs.spp <span class="ot">&lt;-</span>  hab.data <span class="sc">%&gt;%</span> <span class="fu">filter</span>(Classification<span class="sc">==</span><span class="st">&quot;NFS&quot;</span>) <span class="sc">%&gt;%</span> <span class="fu">pull</span>(spp)</span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a><span class="co"># sitXsp datasets for each</span></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>b.com.fs <span class="ot">&lt;-</span> b.com <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">select</span>(Landscape, Point, <span class="fu">all_of</span>(fs.spp))</span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>b.com.nfs <span class="ot">&lt;-</span> b.com <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">select</span>(Landscape, Point, <span class="fu">all_of</span>(nfs.spp))</span></code></pre></div>
 <div id="presence-absence-beta-rc-for-fs-and-nfs" class="section level2">
 <h2>Presence-absence beta RC for FS and NFS:</h2>
 <p>Set a regional pool as reference:</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="do">## extract landscapes to loop it to</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>Landscape <span class="ot">&lt;-</span> <span class="fu">unique</span>(b.com<span class="sc">$</span>Landscape)</span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="do">##### FS #####</span></span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Pool regional - Forest specialists that were caught in all lands</span></span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>reg.pool.fs <span class="ot">&lt;-</span> <span class="fu">colSums</span>(b.com.fs[,<span class="dv">3</span><span class="sc">:</span><span class="fu">dim</span>(b.com.fs)[<span class="dv">2</span>]]) <span class="do">## regional pool of FS spp</span></span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>rc.df.fs <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">Landscape=</span><span class="cn">NA</span>, <span class="at">beta.rc=</span><span class="cn">NA</span>)</span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>beta.lands.fs <span class="ot">&lt;-</span> <span class="fu">list</span>()</span>
-<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(Landscape)){</span>
-<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>  b.com.fs2 <span class="ot">&lt;-</span> b.com.fs[b.com.fs<span class="sc">$</span>Landscape <span class="sc">==</span> Landscape[i],]</span>
-<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>  beta <span class="ot">&lt;-</span> <span class="fu">raup_crick</span>(b.com.fs2[,<span class="dv">3</span><span class="sc">:</span><span class="fu">dim</span>(b.com.fs2)[<span class="dv">2</span>]], <span class="at">plot_names_in_col1 =</span> F, <span class="at">occur =</span> reg.pool.fs)</span>
-<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>  rc.df.fs[i,<span class="dv">1</span>] <span class="ot">&lt;-</span> Landscape[i]</span>
-<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>  rc.df.fs[i,<span class="dv">2</span>] <span class="ot">&lt;-</span> <span class="fu">mean</span>(beta)</span>
-<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>  beta.lands.fs[[i]] <span class="ot">&lt;-</span> beta</span>
-<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a>(rc.df.fs <span class="ot">&lt;-</span> rc.df.fs <span class="sc">%&gt;%</span> <span class="fu">rename</span>(<span class="at">brc.fs.raw =</span> beta.rc))</span></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="do">## extract landscapes to loop it to</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>Landscape <span class="ot">&lt;-</span> <span class="fu">unique</span>(b.com<span class="sc">$</span>Landscape)</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="do">##### FS #####</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Pool regional - Forest specialists that were caught in all lands</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>reg.pool.fs <span class="ot">&lt;-</span> <span class="fu">colSums</span>(b.com.fs[,<span class="dv">3</span><span class="sc">:</span><span class="fu">dim</span>(b.com.fs)[<span class="dv">2</span>]]) <span class="do">## regional pool of FS spp</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>rc.df.fs <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">Landscape=</span><span class="cn">NA</span>, <span class="at">beta.rc=</span><span class="cn">NA</span>)</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>beta.lands.fs <span class="ot">&lt;-</span> <span class="fu">list</span>()</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(Landscape)){</span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>  b.com.fs2 <span class="ot">&lt;-</span> b.com.fs[b.com.fs<span class="sc">$</span>Landscape <span class="sc">==</span> Landscape[i],]</span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>  beta <span class="ot">&lt;-</span> <span class="fu">raup_crick</span>(b.com.fs2[,<span class="dv">3</span><span class="sc">:</span><span class="fu">dim</span>(b.com.fs2)[<span class="dv">2</span>]], <span class="at">plot_names_in_col1 =</span> F, <span class="at">occur =</span> reg.pool.fs)</span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>  rc.df.fs[i,<span class="dv">1</span>] <span class="ot">&lt;-</span> Landscape[i]</span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>  rc.df.fs[i,<span class="dv">2</span>] <span class="ot">&lt;-</span> <span class="fu">mean</span>(beta)</span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>  beta.lands.fs[[i]] <span class="ot">&lt;-</span> beta</span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a>(rc.df.fs <span class="ot">&lt;-</span> rc.df.fs <span class="sc">%&gt;%</span> <span class="fu">rename</span>(<span class="at">brc.fs.raw =</span> beta.rc))</span></code></pre></div>
 <pre><code>##    Landscape  brc.fs.raw
-## 1        148 -0.29178571
-## 2        215  0.10500000
-## 3        263 -0.36857143
-## 4        266 -0.17178571
-## 5        282 -0.32714286
-## 6        291 -0.38761905
-## 7        317 -0.38321429
-## 8        329 -0.08214286
-## 9        333 -0.13142857
-## 10       335 -0.25535714
-## 11       359 -0.22535714
-## 12       399 -0.09321429</code></pre>
+## 1        148 -0.30107143
+## 2        215  0.09642857
+## 3        263 -0.37714286
+## 4        266 -0.17857143
+## 5        282 -0.28250000
+## 6        291 -0.38952381
+## 7        317 -0.39357143
+## 8        329 -0.06571429
+## 9        333 -0.10714286
+## 10       335 -0.27000000
+## 11       359 -0.16714286
+## 12       399 -0.06357143</code></pre>
 <p>Remove NA that arise from zero occurrence sites:</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># rmNA: remove 0 from calculations</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>ttes <span class="ot">&lt;-</span> <span class="fu">map</span>(beta.lands.fs, as.matrix)</span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="co"># function that substitute 0 per NA:</span></span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>fufa2 <span class="ot">&lt;-</span> <span class="cf">function</span>(x)  <span class="fu">ifelse</span>(x<span class="sc">==</span><span class="dv">0</span>, <span class="cn">NA</span>, x) </span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>ttes <span class="ot">&lt;-</span> <span class="fu">modify_depth</span>(ttes, <span class="dv">1</span>, fufa2)</span>
-<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>ttes <span class="ot">&lt;-</span> <span class="fu">modify_depth</span>(ttes, <span class="dv">1</span>, as.dist)</span>
-<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>rc.df.fs<span class="sc">$</span>brc.fsNA <span class="ot">&lt;-</span> <span class="fu">map_dbl</span>(ttes, mean, <span class="at">na.rm=</span>T)</span></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># rmNA: remove 0 from calculations</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>ttes <span class="ot">&lt;-</span> <span class="fu">map</span>(beta.lands.fs, as.matrix)</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="co"># function that substitute 0 per NA:</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>fufa2 <span class="ot">&lt;-</span> <span class="cf">function</span>(x)  <span class="fu">ifelse</span>(x<span class="sc">==</span><span class="dv">0</span>, <span class="cn">NA</span>, x) </span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>ttes <span class="ot">&lt;-</span> <span class="fu">modify_depth</span>(ttes, <span class="dv">1</span>, fufa2)</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>ttes <span class="ot">&lt;-</span> <span class="fu">modify_depth</span>(ttes, <span class="dv">1</span>, as.dist)</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>rc.df.fs<span class="sc">$</span>brc.fsNA <span class="ot">&lt;-</span> <span class="fu">map_dbl</span>(ttes, mean, <span class="at">na.rm=</span>T)</span></code></pre></div>
 <p>Same steps for non-forest specialists:</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="do">##### NFS #####</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>reg.pool.nfs <span class="ot">&lt;-</span> <span class="fu">colSums</span>(b.com.nfs[,<span class="dv">3</span><span class="sc">:</span><span class="fu">dim</span>(b.com.nfs)[<span class="dv">2</span>]]) <span class="do">## regional pool of nfs spp</span></span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>rc.df.nfs <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">Landscape=</span><span class="cn">NA</span>, <span class="at">beta.rc=</span><span class="cn">NA</span>)</span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>beta.lands.nfs <span class="ot">&lt;-</span> <span class="fu">list</span>()</span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(Landscape)){</span>
-<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>  b.com.nfs2 <span class="ot">&lt;-</span> b.com.nfs[b.com.nfs<span class="sc">$</span>Landscape <span class="sc">==</span> Landscape[i],]</span>
-<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>  beta <span class="ot">&lt;-</span> <span class="fu">raup_crick</span>(b.com.nfs2[,<span class="dv">3</span><span class="sc">:</span><span class="fu">dim</span>(b.com.nfs2)[<span class="dv">2</span>]], <span class="at">plot_names_in_col1 =</span> F, <span class="at">occur =</span> reg.pool.nfs)</span>
-<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>  rc.df.nfs[i,<span class="dv">1</span>] <span class="ot">&lt;-</span> Landscape[i]</span>
-<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>  rc.df.nfs[i,<span class="dv">2</span>] <span class="ot">&lt;-</span> <span class="fu">mean</span>(beta)</span>
-<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>  beta.lands.nfs[[i]] <span class="ot">&lt;-</span> beta</span>
-<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>(rc.df.nfs <span class="ot">&lt;-</span> rc.df.nfs <span class="sc">%&gt;%</span> <span class="fu">rename</span>(<span class="at">brc.nfs.raw =</span> beta.rc))</span></code></pre></div>
-<pre><code>##    Landscape brc.nfs.raw
-## 1        148  0.09642857
-## 2        215 -0.23285714
-## 3        263 -0.02464286
-## 4        266  0.09821429
-## 5        282 -0.08321429
-## 6        291 -0.58619048
-## 7        317 -0.53464286
-## 8        329  0.22321429
-## 9        333  0.19214286
-## 10       335 -0.25178571
-## 11       359  0.30678571
-## 12       399  0.26928571</code></pre>
-<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># rmNA: remove 0 from calculations</span></span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>ttes <span class="ot">&lt;-</span> <span class="fu">map</span>(beta.lands.nfs, as.matrix)</span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>ttes <span class="ot">&lt;-</span> <span class="fu">modify_depth</span>(ttes, <span class="dv">1</span>, fufa2) <span class="co"># function that sub 0 for NA</span></span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>ttes <span class="ot">&lt;-</span> <span class="fu">modify_depth</span>(ttes, <span class="dv">1</span>, as.dist)</span>
-<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>rc.df.nfs<span class="sc">$</span>brc.nfsNA <span class="ot">&lt;-</span> <span class="fu">map_dbl</span>(ttes, mean, <span class="at">na.rm=</span>T)</span></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="do">##### NFS #####</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>reg.pool.nfs <span class="ot">&lt;-</span> <span class="fu">colSums</span>(b.com.nfs[,<span class="dv">3</span><span class="sc">:</span><span class="fu">dim</span>(b.com.nfs)[<span class="dv">2</span>]]) <span class="do">## regional pool of nfs spp</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>rc.df.nfs <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">Landscape=</span><span class="cn">NA</span>, <span class="at">beta.rc=</span><span class="cn">NA</span>)</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>beta.lands.nfs <span class="ot">&lt;-</span> <span class="fu">list</span>()</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(Landscape)){</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>  b.com.nfs2 <span class="ot">&lt;-</span> b.com.nfs[b.com.nfs<span class="sc">$</span>Landscape <span class="sc">==</span> Landscape[i],]</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>  beta <span class="ot">&lt;-</span> <span class="fu">raup_crick</span>(b.com.nfs2[,<span class="dv">3</span><span class="sc">:</span><span class="fu">dim</span>(b.com.nfs2)[<span class="dv">2</span>]], <span class="at">plot_names_in_col1 =</span> F, <span class="at">occur =</span> reg.pool.nfs)</span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>  rc.df.nfs[i,<span class="dv">1</span>] <span class="ot">&lt;-</span> Landscape[i]</span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>  rc.df.nfs[i,<span class="dv">2</span>] <span class="ot">&lt;-</span> <span class="fu">mean</span>(beta)</span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>  beta.lands.nfs[[i]] <span class="ot">&lt;-</span> beta</span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>(rc.df.nfs <span class="ot">&lt;-</span> rc.df.nfs <span class="sc">%&gt;%</span> <span class="fu">rename</span>(<span class="at">brc.nfs.raw =</span> beta.rc))</span></code></pre></div>
+<pre><code>##    Landscape  brc.nfs.raw
+## 1        148  0.102500000
+## 2        215 -0.226071429
+## 3        263 -0.002142857
+## 4        266  0.101428571
+## 5        282 -0.140000000
+## 6        291 -0.587142857
+## 7        317 -0.526785714
+## 8        329  0.121071429
+## 9        333  0.191071429
+## 10       335 -0.246071429
+## 11       359  0.271785714
+## 12       399  0.238928571</code></pre>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># rmNA: remove 0 from calculations</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>ttes <span class="ot">&lt;-</span> <span class="fu">map</span>(beta.lands.nfs, as.matrix)</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>ttes <span class="ot">&lt;-</span> <span class="fu">modify_depth</span>(ttes, <span class="dv">1</span>, fufa2) <span class="co"># function that sub 0 for NA</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>ttes <span class="ot">&lt;-</span> <span class="fu">modify_depth</span>(ttes, <span class="dv">1</span>, as.dist)</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>rc.df.nfs<span class="sc">$</span>brc.nfsNA <span class="ot">&lt;-</span> <span class="fu">map_dbl</span>(ttes, mean, <span class="at">na.rm=</span>T)</span></code></pre></div>
 </div>
 <div id="abundance-based-beta-rc-for-fs-and-nfs" class="section level2">
 <h2>Abundance-based Beta RC for FS and NFS:</h2>
 <p>First for Forest specialists, then for non-forest specialists, we set
-a regional species group, caculate beta and transform zero occurrence
+a regional species group, calculate beta and transform zero occurrence
 sites in NA to remove it from calculations.</p>
-<p>Final Beta Raup-Crick, both presence-absence abundance-based,
+<p>Final Beta Raup-Crick, both presence-absence and abundance-based,
 below:</p>
-<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="do">##### RAUP-CRICK ABUNDANCE modif Puttker #####</span></span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="do">#### FS ####</span></span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="do">## set regional spp pool</span></span>
-<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>reg.pool.fs <span class="ot">&lt;-</span> b.com.fs <span class="sc">%&gt;%</span> <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="sc">-</span>Landscape, <span class="sc">-</span>Point) <span class="sc">%&gt;%</span> </span>
-<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise_all</span>(sum) <span class="sc">%&gt;%</span> <span class="fu">gather</span>(<span class="st">&quot;spp&quot;</span>,<span class="st">&quot;abund&quot;</span>,<span class="dv">1</span><span class="sc">:</span><span class="dv">28</span>)</span>
-<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>reg.pool.fs <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(reg.pool.fs)</span>
-<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>rc.df.abund.fs <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">Landscape=</span><span class="cn">NA</span>, <span class="at">brc.abund.fs.raw=</span><span class="cn">NA</span>)</span>
-<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>beta.lands.abund.fs <span class="ot">&lt;-</span> <span class="fu">list</span>()</span>
-<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(Landscape)){</span>
-<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>  b.com.fs2 <span class="ot">&lt;-</span> b.com.fs[b.com.fs<span class="sc">$</span>Landscape <span class="sc">==</span> Landscape[i],]</span>
-<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a>  b.com.fs2 <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(b.com.fs2)</span>
-<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a>  beta <span class="ot">&lt;-</span> <span class="fu">rc_qrand</span>(b.com.fs2[,<span class="dv">3</span><span class="sc">:</span><span class="fu">dim</span>(b.com.fs2)[<span class="dv">2</span>]], <span class="at">pool =</span> reg.pool.fs)</span>
-<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a>  rc.df.abund.fs[i,<span class="dv">1</span>] <span class="ot">&lt;-</span> Landscape[i]</span>
-<span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a>  rc.df.abund.fs[i,<span class="dv">2</span>] <span class="ot">&lt;-</span> <span class="fu">mean</span>(beta, <span class="at">na.rm =</span> T)</span>
-<span id="cb19-18"><a href="#cb19-18" aria-hidden="true" tabindex="-1"></a>  beta.lands.abund.fs[[i]] <span class="ot">&lt;-</span> beta</span>
-<span id="cb19-19"><a href="#cb19-19" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb19-20"><a href="#cb19-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-21"><a href="#cb19-21" aria-hidden="true" tabindex="-1"></a><span class="co"># rmNA: remove 0 from calculations</span></span>
-<span id="cb19-22"><a href="#cb19-22" aria-hidden="true" tabindex="-1"></a>ttes <span class="ot">&lt;-</span> <span class="fu">map</span>(beta.lands.abund.fs, as.matrix)</span>
-<span id="cb19-23"><a href="#cb19-23" aria-hidden="true" tabindex="-1"></a>ttes <span class="ot">&lt;-</span> <span class="fu">modify_depth</span>(ttes, <span class="dv">1</span>, fufa2) <span class="co"># function that sub 0 per NA</span></span>
-<span id="cb19-24"><a href="#cb19-24" aria-hidden="true" tabindex="-1"></a>ttes <span class="ot">&lt;-</span> <span class="fu">modify_depth</span>(ttes, <span class="dv">1</span>, as.dist)</span>
-<span id="cb19-25"><a href="#cb19-25" aria-hidden="true" tabindex="-1"></a>rc.df.abund.fs<span class="sc">$</span>brc.abund.fsNA <span class="ot">&lt;-</span> <span class="fu">map_dbl</span>(ttes, mean, <span class="at">na.rm=</span> T)</span>
-<span id="cb19-26"><a href="#cb19-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-27"><a href="#cb19-27" aria-hidden="true" tabindex="-1"></a><span class="do">#### NFS ####</span></span>
-<span id="cb19-28"><a href="#cb19-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-29"><a href="#cb19-29" aria-hidden="true" tabindex="-1"></a><span class="do">## set regional spp pool</span></span>
-<span id="cb19-30"><a href="#cb19-30" aria-hidden="true" tabindex="-1"></a>reg.pool.nfs <span class="ot">&lt;-</span> b.com.nfs <span class="sc">%&gt;%</span> <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="sc">-</span>Landscape, <span class="sc">-</span>Point) <span class="sc">%&gt;%</span> <span class="fu">summarise_all</span>(sum) <span class="sc">%&gt;%</span> <span class="fu">gather</span>(<span class="st">&quot;spp&quot;</span>,<span class="st">&quot;abund&quot;</span>,<span class="dv">1</span><span class="sc">:</span><span class="dv">23</span>)</span>
-<span id="cb19-31"><a href="#cb19-31" aria-hidden="true" tabindex="-1"></a>reg.pool.nfs <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(reg.pool.nfs)</span>
-<span id="cb19-32"><a href="#cb19-32" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-33"><a href="#cb19-33" aria-hidden="true" tabindex="-1"></a>rc.df.abund.nfs <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">Landscape=</span><span class="cn">NA</span>, <span class="at">brc.abund.nfs.raw=</span><span class="cn">NA</span>)</span>
-<span id="cb19-34"><a href="#cb19-34" aria-hidden="true" tabindex="-1"></a>beta.lands.abund.nfs <span class="ot">&lt;-</span> <span class="fu">list</span>()</span>
-<span id="cb19-35"><a href="#cb19-35" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-36"><a href="#cb19-36" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(Landscape)){</span>
-<span id="cb19-37"><a href="#cb19-37" aria-hidden="true" tabindex="-1"></a>  b.com.nfs2 <span class="ot">&lt;-</span> b.com.nfs[b.com.nfs<span class="sc">$</span>Landscape <span class="sc">==</span> Landscape[i],]</span>
-<span id="cb19-38"><a href="#cb19-38" aria-hidden="true" tabindex="-1"></a>  beta <span class="ot">&lt;-</span> <span class="fu">rc_qrand</span>(b.com.nfs2[,<span class="dv">3</span><span class="sc">:</span><span class="fu">dim</span>(b.com.nfs2)[<span class="dv">2</span>]], <span class="at">pool =</span> reg.pool.nfs)</span>
-<span id="cb19-39"><a href="#cb19-39" aria-hidden="true" tabindex="-1"></a>  rc.df.abund.nfs[i,<span class="dv">1</span>] <span class="ot">&lt;-</span> Landscape[i]</span>
-<span id="cb19-40"><a href="#cb19-40" aria-hidden="true" tabindex="-1"></a>  rc.df.abund.nfs[i,<span class="dv">2</span>] <span class="ot">&lt;-</span> <span class="fu">mean</span>(beta, <span class="at">na.rm =</span> T)</span>
-<span id="cb19-41"><a href="#cb19-41" aria-hidden="true" tabindex="-1"></a>  beta.lands.abund.nfs[[i]] <span class="ot">&lt;-</span> beta</span>
-<span id="cb19-42"><a href="#cb19-42" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb19-43"><a href="#cb19-43" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-44"><a href="#cb19-44" aria-hidden="true" tabindex="-1"></a><span class="co"># rmNA: remove 0 from calculations</span></span>
-<span id="cb19-45"><a href="#cb19-45" aria-hidden="true" tabindex="-1"></a>ttes <span class="ot">&lt;-</span> <span class="fu">map</span>(beta.lands.abund.nfs, as.matrix)</span>
-<span id="cb19-46"><a href="#cb19-46" aria-hidden="true" tabindex="-1"></a>ttes <span class="ot">&lt;-</span> <span class="fu">modify_depth</span>(ttes, <span class="dv">1</span>, fufa2) <span class="co"># function that sub 0 per NA</span></span>
-<span id="cb19-47"><a href="#cb19-47" aria-hidden="true" tabindex="-1"></a>ttes <span class="ot">&lt;-</span> <span class="fu">modify_depth</span>(ttes, <span class="dv">1</span>, as.dist)</span>
-<span id="cb19-48"><a href="#cb19-48" aria-hidden="true" tabindex="-1"></a>rc.df.abund.nfs<span class="sc">$</span>brc.abund.nfsNA <span class="ot">&lt;-</span> <span class="fu">map_dbl</span>(ttes, mean, <span class="at">na.rm=</span> T)</span>
-<span id="cb19-49"><a href="#cb19-49" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-50"><a href="#cb19-50" aria-hidden="true" tabindex="-1"></a><span class="do">#### gather all data in one set to then save it</span></span>
-<span id="cb19-51"><a href="#cb19-51" aria-hidden="true" tabindex="-1"></a>(rc.df <span class="ot">&lt;-</span> rc.df.fs <span class="sc">%&gt;%</span>  <span class="co"># P/A-based Brc  for fs spp</span></span>
-<span id="cb19-52"><a href="#cb19-52" aria-hidden="true" tabindex="-1"></a>   <span class="fu">left_join</span>(rc.df.nfs, <span class="at">by=</span> <span class="st">&quot;Landscape&quot;</span>) <span class="sc">%&gt;%</span><span class="co"># P/A-based Brc for NFS</span></span>
-<span id="cb19-53"><a href="#cb19-53" aria-hidden="true" tabindex="-1"></a>   <span class="fu">left_join</span>(rc.df.abund.fs, <span class="at">by=</span> <span class="st">&quot;Landscape&quot;</span>) <span class="sc">%&gt;%</span> <span class="co"># Abund-based FS</span></span>
-<span id="cb19-54"><a href="#cb19-54" aria-hidden="true" tabindex="-1"></a>   <span class="fu">left_join</span>(rc.df.abund.nfs, <span class="at">by=</span> <span class="st">&quot;Landscape&quot;</span>) <span class="sc">%&gt;%</span> <span class="co"># Abund-based NFS</span></span>
-<span id="cb19-55"><a href="#cb19-55" aria-hidden="true" tabindex="-1"></a>   <span class="fu">left_join</span>(env.data, <span class="at">by=</span> <span class="st">&quot;Landscape&quot;</span>))</span></code></pre></div>
-<pre><code>##    Landscape  brc.fs.raw    brc.fsNA brc.nfs.raw   brc.nfsNA brc.abund.fs.raw
-## 1        148 -0.29178571 -0.29178571  0.09642857  0.18000000     0.0007150007
-## 2        215  0.10500000  0.10500000 -0.23285714 -0.31047619     0.2842485342
-## 3        263 -0.36857143 -0.49142857 -0.02464286 -0.03285714     0.6290099623
-## 4        266 -0.17178571 -0.22904762  0.09821429  0.13095238     0.1069164402
-## 5        282 -0.32714286 -0.32714286 -0.08321429 -0.11095238     0.2140712141
-## 6        291 -0.38761905 -0.38761905 -0.58619048 -0.58619048     0.0977167644
-## 7        317 -0.38321429 -0.38321429 -0.53464286 -0.53464286     0.1839339339
-## 8        329 -0.08214286 -0.08214286  0.22321429  0.22321429     0.9174174174
-## 9        333 -0.13142857 -0.13142857  0.19214286  0.19214286     0.6792864293
-## 10       335 -0.25535714 -0.25535714 -0.25178571 -0.33571429     0.3477763478
-## 11       359 -0.22535714 -0.22535714  0.30678571  0.30678571     0.7706277706
-## 12       399 -0.09321429 -0.12428571  0.26928571  0.26928571     0.9614376281
-##    brc.abund.fsNA brc.abund.nfs.raw brc.abund.nfsNA   fc_3km   fc_5km
-## 1    0.0007150007         0.4310978       0.4310978 38.52523 43.86337
-## 2    0.2842485342         0.3969207       0.3969207 30.15485 25.23160
-## 3    0.6290099623         0.3908194       0.3908194 10.10641 13.41180
-## 4    0.1069164402         0.1522952       0.1522952 30.87525 31.16090
-## 5    0.2140712141         0.7270127       0.7270127 15.26270 16.35308
-## 6    0.0977167644        -0.4293818      -0.4293818 45.74294 45.13213
-## 7    0.1839339339        -0.4355784      -0.4355784 48.75805 47.85138
-## 8    0.9174174174         0.4880952       0.4880952 14.73791 13.62588
-## 9    0.6792864293         0.6124339       0.6124339 13.71403 14.50960
-## 10   0.3477763478        -0.9467563      -0.9467563 23.87913 19.21670
-## 11   0.7706277706         0.8152081       0.8152081 18.10208 17.62431
-## 12   0.9614376281         0.7002717       0.7002717 29.73616 24.97851</code></pre>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="do">#### FS ####</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="do">## set regional spp pool</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>reg.pool.fs <span class="ot">&lt;-</span> b.com.fs <span class="sc">%&gt;%</span> <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span> dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="sc">-</span>Landscape, <span class="sc">-</span>Point) <span class="sc">%&gt;%</span> </span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise_all</span>(sum) <span class="sc">%&gt;%</span> <span class="fu">gather</span>(<span class="st">&quot;spp&quot;</span>,<span class="st">&quot;abund&quot;</span>,<span class="dv">1</span><span class="sc">:</span><span class="dv">28</span>)</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>reg.pool.fs <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(reg.pool.fs)</span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>rc.df.abund.fs <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">Landscape=</span><span class="cn">NA</span>, <span class="at">brc.abund.fs.raw=</span><span class="cn">NA</span>)</span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>beta.lands.abund.fs <span class="ot">&lt;-</span> <span class="fu">list</span>()</span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(Landscape)){</span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>  b.com.fs2 <span class="ot">&lt;-</span> b.com.fs[b.com.fs<span class="sc">$</span>Landscape <span class="sc">==</span> Landscape[i],]</span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>  b.com.fs2 <span class="ot">&lt;-</span> <span class="fu">as.matrix</span>(b.com.fs2)</span>
+<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a>  beta <span class="ot">&lt;-</span> <span class="fu">rc_qrand</span>(b.com.fs2[,<span class="dv">3</span><span class="sc">:</span><span class="fu">dim</span>(b.com.fs2)[<span class="dv">2</span>]], <span class="at">pool =</span> reg.pool.fs)</span>
+<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a>  rc.df.abund.fs[i,<span class="dv">1</span>] <span class="ot">&lt;-</span> Landscape[i]</span>
+<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a>  rc.df.abund.fs[i,<span class="dv">2</span>] <span class="ot">&lt;-</span> <span class="fu">mean</span>(beta, <span class="at">na.rm =</span> T)</span>
+<span id="cb21-17"><a href="#cb21-17" aria-hidden="true" tabindex="-1"></a>  beta.lands.abund.fs[[i]] <span class="ot">&lt;-</span> beta</span>
+<span id="cb21-18"><a href="#cb21-18" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb21-19"><a href="#cb21-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-20"><a href="#cb21-20" aria-hidden="true" tabindex="-1"></a><span class="co"># rmNA: remove 0 from calculations</span></span>
+<span id="cb21-21"><a href="#cb21-21" aria-hidden="true" tabindex="-1"></a>ttes <span class="ot">&lt;-</span> <span class="fu">map</span>(beta.lands.abund.fs, as.matrix)</span>
+<span id="cb21-22"><a href="#cb21-22" aria-hidden="true" tabindex="-1"></a>ttes <span class="ot">&lt;-</span> <span class="fu">modify_depth</span>(ttes, <span class="dv">1</span>, fufa2) <span class="co"># function that sub 0 per NA</span></span>
+<span id="cb21-23"><a href="#cb21-23" aria-hidden="true" tabindex="-1"></a>ttes <span class="ot">&lt;-</span> <span class="fu">modify_depth</span>(ttes, <span class="dv">1</span>, as.dist)</span>
+<span id="cb21-24"><a href="#cb21-24" aria-hidden="true" tabindex="-1"></a>rc.df.abund.fs<span class="sc">$</span>brc.abund.fsNA <span class="ot">&lt;-</span> <span class="fu">map_dbl</span>(ttes, mean, <span class="at">na.rm=</span> T)</span>
+<span id="cb21-25"><a href="#cb21-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-26"><a href="#cb21-26" aria-hidden="true" tabindex="-1"></a><span class="do">#### NFS ####</span></span>
+<span id="cb21-27"><a href="#cb21-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-28"><a href="#cb21-28" aria-hidden="true" tabindex="-1"></a><span class="do">## set regional spp pool</span></span>
+<span id="cb21-29"><a href="#cb21-29" aria-hidden="true" tabindex="-1"></a>reg.pool.nfs <span class="ot">&lt;-</span> b.com.nfs <span class="sc">%&gt;%</span> <span class="fu">ungroup</span>() <span class="sc">%&gt;%</span> </span>
+<span id="cb21-30"><a href="#cb21-30" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">select</span>(<span class="sc">-</span>Landscape, <span class="sc">-</span>Point) <span class="sc">%&gt;%</span> </span>
+<span id="cb21-31"><a href="#cb21-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise_all</span>(sum) <span class="sc">%&gt;%</span> <span class="fu">gather</span>(<span class="st">&quot;spp&quot;</span>,<span class="st">&quot;abund&quot;</span>,<span class="dv">1</span><span class="sc">:</span><span class="dv">22</span>)</span>
+<span id="cb21-32"><a href="#cb21-32" aria-hidden="true" tabindex="-1"></a>reg.pool.nfs <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(reg.pool.nfs)</span>
+<span id="cb21-33"><a href="#cb21-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-34"><a href="#cb21-34" aria-hidden="true" tabindex="-1"></a>rc.df.abund.nfs <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">Landscape=</span><span class="cn">NA</span>, <span class="at">brc.abund.nfs.raw=</span><span class="cn">NA</span>)</span>
+<span id="cb21-35"><a href="#cb21-35" aria-hidden="true" tabindex="-1"></a>beta.lands.abund.nfs <span class="ot">&lt;-</span> <span class="fu">list</span>()</span>
+<span id="cb21-36"><a href="#cb21-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-37"><a href="#cb21-37" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(Landscape)){</span>
+<span id="cb21-38"><a href="#cb21-38" aria-hidden="true" tabindex="-1"></a>  b.com.nfs2 <span class="ot">&lt;-</span> b.com.nfs[b.com.nfs<span class="sc">$</span>Landscape <span class="sc">==</span> Landscape[i],]</span>
+<span id="cb21-39"><a href="#cb21-39" aria-hidden="true" tabindex="-1"></a>  beta <span class="ot">&lt;-</span> <span class="fu">rc_qrand</span>(b.com.nfs2[,<span class="dv">3</span><span class="sc">:</span><span class="fu">dim</span>(b.com.nfs2)[<span class="dv">2</span>]], <span class="at">pool =</span> reg.pool.nfs)</span>
+<span id="cb21-40"><a href="#cb21-40" aria-hidden="true" tabindex="-1"></a>  rc.df.abund.nfs[i,<span class="dv">1</span>] <span class="ot">&lt;-</span> Landscape[i]</span>
+<span id="cb21-41"><a href="#cb21-41" aria-hidden="true" tabindex="-1"></a>  rc.df.abund.nfs[i,<span class="dv">2</span>] <span class="ot">&lt;-</span> <span class="fu">mean</span>(beta, <span class="at">na.rm =</span> T)</span>
+<span id="cb21-42"><a href="#cb21-42" aria-hidden="true" tabindex="-1"></a>  beta.lands.abund.nfs[[i]] <span class="ot">&lt;-</span> beta</span>
+<span id="cb21-43"><a href="#cb21-43" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb21-44"><a href="#cb21-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-45"><a href="#cb21-45" aria-hidden="true" tabindex="-1"></a><span class="co"># rmNA: remove 0 from calculations</span></span>
+<span id="cb21-46"><a href="#cb21-46" aria-hidden="true" tabindex="-1"></a>ttes <span class="ot">&lt;-</span> <span class="fu">map</span>(beta.lands.abund.nfs, as.matrix)</span>
+<span id="cb21-47"><a href="#cb21-47" aria-hidden="true" tabindex="-1"></a>ttes <span class="ot">&lt;-</span> <span class="fu">modify_depth</span>(ttes, <span class="dv">1</span>, fufa2) <span class="co"># function that sub 0 per NA</span></span>
+<span id="cb21-48"><a href="#cb21-48" aria-hidden="true" tabindex="-1"></a>ttes <span class="ot">&lt;-</span> <span class="fu">modify_depth</span>(ttes, <span class="dv">1</span>, as.dist)</span>
+<span id="cb21-49"><a href="#cb21-49" aria-hidden="true" tabindex="-1"></a>rc.df.abund.nfs<span class="sc">$</span>brc.abund.nfsNA <span class="ot">&lt;-</span> <span class="fu">map_dbl</span>(ttes, mean, <span class="at">na.rm=</span> T)</span>
+<span id="cb21-50"><a href="#cb21-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-51"><a href="#cb21-51" aria-hidden="true" tabindex="-1"></a><span class="do">#### gather all data in one set to then save it</span></span>
+<span id="cb21-52"><a href="#cb21-52" aria-hidden="true" tabindex="-1"></a>(rc.df <span class="ot">&lt;-</span> rc.df.fs <span class="sc">%&gt;%</span>  <span class="co"># P/A-based Brc  for fs spp</span></span>
+<span id="cb21-53"><a href="#cb21-53" aria-hidden="true" tabindex="-1"></a>   <span class="fu">left_join</span>(rc.df.nfs, <span class="at">by=</span> <span class="st">&quot;Landscape&quot;</span>) <span class="sc">%&gt;%</span><span class="co"># P/A-based Brc for NFS</span></span>
+<span id="cb21-54"><a href="#cb21-54" aria-hidden="true" tabindex="-1"></a>   <span class="fu">left_join</span>(rc.df.abund.fs, <span class="at">by=</span> <span class="st">&quot;Landscape&quot;</span>) <span class="sc">%&gt;%</span> <span class="co"># Abund-based FS</span></span>
+<span id="cb21-55"><a href="#cb21-55" aria-hidden="true" tabindex="-1"></a>   <span class="fu">left_join</span>(rc.df.abund.nfs, <span class="at">by=</span> <span class="st">&quot;Landscape&quot;</span>) <span class="sc">%&gt;%</span> <span class="co"># Abund-based NFS</span></span>
+<span id="cb21-56"><a href="#cb21-56" aria-hidden="true" tabindex="-1"></a>   <span class="fu">left_join</span>(env.data, <span class="at">by=</span> <span class="st">&quot;Landscape&quot;</span>))</span></code></pre></div>
+<pre><code>##    Landscape  brc.fs.raw    brc.fsNA  brc.nfs.raw    brc.nfsNA brc.abund.fs.raw
+## 1        148 -0.30107143 -0.30107143  0.102500000  0.191333333      -0.01680252
+## 2        215  0.09642857  0.09642857 -0.226071429 -0.301428571       0.27899328
+## 3        263 -0.37714286 -0.50285714 -0.002142857 -0.002857143       0.62119262
+## 4        266 -0.17857143 -0.23809524  0.101428571  0.135238095       0.11011011
+## 5        282 -0.28250000 -0.28250000 -0.140000000 -0.186666667       0.22211497
+## 6        291 -0.38952381 -0.38952381 -0.587142857 -0.587142857       0.09228276
+## 7        317 -0.39357143 -0.40814815 -0.526785714 -0.526785714       0.18475618
+## 8        329 -0.06571429 -0.06571429  0.121071429  0.121071429       0.93636494
+## 9        333 -0.10714286 -0.10714286  0.191071429  0.191071429       0.67324467
+## 10       335 -0.27000000 -0.28000000 -0.246071429 -0.328095238       0.34109109
+## 11       359 -0.16714286 -0.16714286  0.271785714  0.271785714       0.77820678
+## 12       399 -0.06357143 -0.08476190  0.238928571  0.247777778       0.96081796
+##    brc.abund.fsNA brc.abund.nfs.raw brc.abund.nfsNA   fc_3km   fc_5km        x
+## 1     -0.01680252         0.4287621       0.4287621 38.52523 43.86337 362765.4
+## 2      0.27899328         0.4007341       0.4007341 30.15485 25.23160 354567.2
+## 3      0.62119262         0.3976834       0.3976834 10.10641 13.41180 362513.7
+## 4      0.11011011         0.1480051       0.1480051 30.87525 31.16090 374458.1
+## 5      0.22211497         0.6852090       0.6852090 15.26270 16.35308 346306.9
+## 6      0.09228276        -0.4233758      -0.4233758 45.74294 45.13213 381100.7
+## 7      0.18475618        -0.4268197      -0.4268197 48.75805 47.85138 393791.9
+## 8      0.93636494         0.4331117       0.4331117 14.73791 13.62588 350732.9
+## 9      0.67324467         0.6210854       0.6210854 13.71403 14.50960 367514.6
+## 10     0.34109109        -0.9469946      -0.9469946 23.87913 19.21670 374253.8
+## 11     0.77820678         0.8100243       0.8100243 18.10208 17.62431 378464.3
+## 12     0.96081796         0.7001645       0.7001645 29.73616 24.97851 354798.3
+##          y
+## 1  7428959
+## 2  7441004
+## 3  7448916
+## 4  7448927
+## 5  7452237
+## 6  7448911
+## 7  7457326
+## 8  7460933
+## 9  7461412
+## 10 7460512
+## 11 7464936
+## 12 7472819</code></pre>
 </div>
 </div>
 <div id="save-final-tidy-dataset" class="section level1">
 <h1>Save final tidy dataset:</h1>
-<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">save</span>(beetles, <span class="co"># raw data for species occurrence per landscape/site; </span></span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>     hab.data, <span class="co"># data containing classes of habitat association;</span></span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>     env.data, <span class="co"># environmental variables</span></span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>     div_hab, <span class="co"># diversity (alpha, beta and gamma) between classification habitat association</span></span>
-<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>     ab_hab, <span class="co"># mean and median abundance between classification habitat association</span></span>
-<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>     st.hab_ab, <span class="co"># abundance data between classification habitat association per site</span></span>
-<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>     rc.df, <span class="co"># Beta RC calculations</span></span>
-<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>     <span class="at">file=</span> <span class="fu">here</span>(<span class="st">&quot;datasets&quot;</span>, <span class="st">&quot;beetles.Rdata&quot;</span>))</span></code></pre></div>
+<div class="sourceCode" id="cb23"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">save</span>(beetles, <span class="co"># raw data for species occurrence per landscape/site; </span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>     hab.data, <span class="co"># data containing classes of habitat association;</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>     env.data, <span class="co"># environmental variables</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>     div_hab, <span class="co"># diversity (alpha, beta and gamma) between classification habitat association</span></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>     ab_hab, <span class="co"># mean and median abundance between classification habitat association</span></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>     st.hab_ab, <span class="co"># abundance data between classification habitat association per site</span></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>     rc.df, <span class="co"># Beta RC calculations</span></span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>     <span class="at">file=</span> <span class="fu">here</span>(<span class="st">&quot;datasets&quot;</span>, <span class="st">&quot;beetles.Rdata&quot;</span>))</span></code></pre></div>
 </div>
 </div>
 
