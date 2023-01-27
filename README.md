@@ -9,6 +9,8 @@ The original dataset is available at the Figshare Digital Repository: *(10.6084/
 
 **Authors:** _Julia Rodrigues Barreto_, Renata Pardini, Jean Paul Metzger & Elizabeth S. Nichols.
 
+_Corresponding author:_ JRB, Department of Ecology at the University of São Paulo: barretoj@usp.br
+
 **Keywords**: Deforestation, community assembly, additive partitioning of diversity, landscape-level sampling, Scarabaeidae: Scarabaeinae, biotic differentiation & biotic Homogenization.
 
 **Permits**: Permission for the data collection was obtained from the Brazilian Institute of Environment and Renewable Natural Resources (IBAMA) under SISBIO number 46697-1.
