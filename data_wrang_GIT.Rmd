@@ -172,10 +172,10 @@ kable(ab_hab) %>% kable_styling(bootstrap_options = c("striped", "hover"), full_
 Load functions:
 ```{r}
 # Load beta RC presence-absence function:
-source(here("scripts", "raup_crick_modif.R"))
+source(here("auxiliary_functions", "raup_crick_modif.R"))
 # load beta RC abundance-based function:
 # função rc_qrand modificado de Puttker et al. 2014
-source(here("scripts", "rc_qrand_modif.R"))
+source(here("auxiliary_functions", "rc_qrand_modif.R"))
 ```
 
 Start from community matrix (spp x site) and subset it for each group, as we treat it separately:
